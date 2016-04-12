@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
     EditText email, pass;
     Firebase ref;
 
-    //#sadfbselfnsdnf;sm;sm
+    //#firebase
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

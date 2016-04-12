@@ -10,7 +10,7 @@
     <string name="activate">Activate</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_home">Home</string>
-    <string name="signup"><u>Sign Up for Restro</u></string>
+    <string name="signup"><u>Sign Up for ExtraClass</u></string>
 
     //reg page
     <string name="username">Username</string>

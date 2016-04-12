@@ -20,6 +20,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,10 +88,32 @@ public class Login extends AppCompatActivity {
                         public void onAuthenticated(AuthData authData) {
                             System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
                             Log.d("onnAuth","Logged in");
+
+                           /* Map<String, String> map = new HashMap<String, String>();
+                            map.put("provider", authData.getProvider());
+                            if(authData.getProviderData().containsKey("displayName")) {
+                                map.put("displayName", authData.getProviderData().get("displayName").toString());
+                            }
+                            ref.child("users").child(authData.getUid()).setValue(map);*/
+
                             Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Login.this,Home.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+
+                            final Firebase reftr = new Firebase("https://extraclass.firebaseio.com/courses");
+                            reftr.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    System.out.println("onn" + snapshot.getValue());
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+                                    System.out.println("The read failed: " + firebaseError.getMessage());
+                                }
+                            });
+
                         }
                         @Override
                         public void onAuthenticationError(FirebaseError firebaseError) {
@@ -97,14 +121,15 @@ public class Login extends AppCompatActivity {
                             switch (firebaseError.getCode()) {
                                 case FirebaseError.USER_DOES_NOT_EXIST:
                                     Log.d("onnAuthError1","User doesnt exist");
-                                    Toast.makeText(Login.this,"User does not exist",Toast.LENGTH_SHORT);
+                                    Toast.makeText(Login.this,"User does not exist",Toast.LENGTH_SHORT).show();
                                     break;
                                 case FirebaseError.INVALID_PASSWORD:
                                     Log.d("onnAuthError2","Wrong Pass");
-                                    Toast.makeText(Login.this, "Incorrect Password", Toast.LENGTH_SHORT);
+                                    Toast.makeText(Login.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     Log.d("onnAuthError3","Default");
+                                    Toast.makeText(Login.this,"Please Try Again",Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -134,6 +159,7 @@ public class Login extends AppCompatActivity {
     boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
+
 
    /* private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;

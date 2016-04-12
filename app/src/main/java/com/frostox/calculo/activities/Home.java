@@ -24,6 +24,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.frostox.calculo.Entities.Mcq;
 import com.frostox.calculo.Entities.McqItem;
 import com.frostox.calculo.Entities.Note;
@@ -50,6 +51,7 @@ public class Home extends AppCompatActivity
 
     CoordinatorLayout coordinatorLayout;
 
+    Firebase ref;
 
     private DaoSession daoSession;
 
@@ -83,6 +85,9 @@ public class Home extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Firebase.setAndroidContext(this);
+        ref = new Firebase("https://extraclass.firebaseio.com/");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -430,6 +435,7 @@ public class Home extends AppCompatActivity
             //TODO Fragement operations
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(Home.this, Login.class);
+            ref.unauth();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else if (id == R.id.nav_share) {

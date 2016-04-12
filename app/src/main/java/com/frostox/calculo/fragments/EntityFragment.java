@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import com.firebase.client.Firebase;
 import com.frostox.calculo.activities.Home;
 import com.frostox.calculo.adapters.RecyclerViewAdapter;
 import com.frostox.calculo.interfaces.EntityGetter;
@@ -40,6 +41,8 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
     private static final String ARG_PARAM2 = "columnName";
 
     private RecyclerView recyclerView;
+
+    Firebase ref;
 
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -102,6 +105,8 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_standard, container, false);
+        Firebase.setAndroidContext(getContext());
+        ref = new Firebase("https://extraclass.firebaseio.com/courses");
         recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         layoutManager = new LinearLayoutManager(homeActivity);
         recyclerView.setLayoutManager(layoutManager);

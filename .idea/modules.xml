@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/golgappaclone-master.iml" filepath="$PROJECT_DIR$/golgappaclone-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/golgappanew.iml" filepath="$PROJECT_DIR$/golgappanew.iml" />
     </modules>
   </component>
 </project>

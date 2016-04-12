@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "calculo.frostox.com.calculo"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        Golgappa {
+            applicationId = "com.frostox.calculo.app.golgappa"
+        }
+        free {
+            applicationId = "com.frostox.calculo.app.free"
+        }
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'de.greenrobot:greendao:2.1.0'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'io.github.kexanie.library:MathView:0.0.5'
+    compile 'com.google.android.gms:play-services-wallet:8.4.0'
+}

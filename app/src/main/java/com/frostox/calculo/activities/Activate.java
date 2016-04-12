@@ -22,7 +22,7 @@ import calculo.frostox.com.calculo.R;
 import de.greenrobot.dao.query.Query;
 
 public class Activate extends AppCompatActivity {
-
+//iiugigi
     DaoSession daoSession;
 
     EditText keyEditText;

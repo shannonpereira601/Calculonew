@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void goLogin(View v){
-        Intent intent = new Intent(this, Activate.class);
+        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
     }
 }

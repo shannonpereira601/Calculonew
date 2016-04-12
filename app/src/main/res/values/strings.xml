@@ -12,6 +12,17 @@
     <string name="title_activity_home">Home</string>
     <string name="signup"><u>Sign Up for Restro</u></string>
 
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="register_now">Register Now!</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email ID</string>
+    <string name="register">Register</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

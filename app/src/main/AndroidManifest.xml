@@ -62,7 +62,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.frostox.calculo.activities.Home" />
         </activity>
-        <activity android:name="com.frostox.calculo.activities.Login"></activity>
+        <activity android:name="com.frostox.calculo.activities.Login" />
+        <activity android:name="com.frostox.calculo.activities.Register"></activity>
     </application>
 
 </manifest>

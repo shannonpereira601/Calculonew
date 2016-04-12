@@ -56,10 +56,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onAuthenticated(AuthData authData) {
                 Log.d("onnAuth","Logged in");
-              /*  Toast.makeText(Login.this, "Logged Innn", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Login.this,Home.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);*/
+                startActivity(intent);
             }
 
             @Override
@@ -105,7 +105,7 @@ public class Login extends AppCompatActivity {
                 }
 
                 if (isValidEmail(emailtext) && (password.length() != 0 && password.length() < 13)) {
-                    ref.authWithPassword("sp@gmail.com", "password", authResultHandler);
+                    ref.authWithPassword("ghanu@gmail.com", "password", authResultHandler);
                     Log.d("onnClick", "Clickable");
                 }
 

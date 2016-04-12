@@ -40,7 +40,7 @@ public class Login extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         final Firebase ref = new Firebase("https://extraclass.firebaseio.com");
 
-        ref.addValueEventListener(new ValueEventListener() {
+   /*     ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.d("jsoncheck",""+snapshot.getValue());
@@ -50,33 +50,8 @@ public class Login extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
-        });
+        });*/
 
-        final Firebase.AuthResultHandler authResultHandler = new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-                Log.d("onnAuth","Logged in");
-                Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Login.this,Home.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                switch (firebaseError.getCode()) {
-                    case FirebaseError.USER_DOES_NOT_EXIST:
-                        Log.d("onnAuthError1","User doesnt exist");
-                        break;
-                    case FirebaseError.INVALID_PASSWORD:
-                        Log.d("onnAuthError2","Wrong Pass");
-                        break;
-                    default:
-                        Log.d("onnAuthError3","Default");
-                        break;
-                }
-            }
-        };
 
         email = (EditText) findViewById(R.id.e1);
         pass = (EditText) findViewById(R.id.e2);
@@ -105,7 +80,35 @@ public class Login extends AppCompatActivity {
                 }
 
                 if (isValidEmail(emailtext) && (password.length() != 0 && password.length() < 13)) {
-                    ref.authWithPassword("ghanu@gmail.com", "password", authResultHandler);
+                   // ref.authWithPassword(, "password", authResultHandler);
+                    ref.authWithPassword(emailtext, password, new Firebase.AuthResultHandler() {
+                        @Override
+                        public void onAuthenticated(AuthData authData) {
+                            System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                            Log.d("onnAuth","Logged in");
+                            Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this,Home.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                        @Override
+                        public void onAuthenticationError(FirebaseError firebaseError) {
+                            // there was an error
+                            switch (firebaseError.getCode()) {
+                                case FirebaseError.USER_DOES_NOT_EXIST:
+                                    Log.d("onnAuthError1","User doesnt exist");
+                                    Toast.makeText(Login.this,"User does not exist",Toast.LENGTH_SHORT);
+                                    break;
+                                case FirebaseError.INVALID_PASSWORD:
+                                    Log.d("onnAuthError2","Wrong Pass");
+                                    Toast.makeText(Login.this, "Incorrect Password", Toast.LENGTH_SHORT);
+                                    break;
+                                default:
+                                    Log.d("onnAuthError3","Default");
+                                    break;
+                            }
+                        }
+                    });
                     Log.d("onnClick", "Clickable");
                 }
 
@@ -118,8 +121,8 @@ public class Login extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //   Intent intent = new Intent(Login.this, Signup.class);
-                // startActivity(intent);
+                Intent intent = new Intent(Login.this, Register.class);
+                startActivity(intent);
             }
         });
         final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
@@ -128,13 +131,8 @@ public class Login extends AppCompatActivity {
         passwordWrapper.setHint("Password");
     }
 
-    boolean isValidEmail(String emailtext) {
-        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(emailtext);
-        return matcher.matches();
+    boolean isValidEmail(CharSequence target) {
+        return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
    /* private boolean haveNetworkConnection() {

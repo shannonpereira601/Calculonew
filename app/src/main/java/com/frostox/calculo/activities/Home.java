@@ -428,6 +428,10 @@ public class Home extends AppCompatActivity
             if (currentList == Entities.MCQ)
                 navPrev();
             //TODO Fragement operations
+        } else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(Home.this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             Snackbar.make(coordinatorLayout, "Not Implemented Yet", Snackbar.LENGTH_LONG).show();
         } else if (id == R.id.nav_send) {
@@ -455,13 +459,10 @@ public class Home extends AppCompatActivity
         name = name.toUpperCase();
         switch (currentList) {
             case STANDARD:
-                if(name.equals("9TH GRADE"))
-                {
-                    name= "9th GRADE";
-                }
-                else if(name.equals("10TH GRADE"))
-                {
-                    name= "10th GRADE";
+                if (name.equals("9TH GRADE")) {
+                    name = "9th GRADE";
+                } else if (name.equals("10TH GRADE")) {
+                    name = "10th GRADE";
                 }
                 currentList = Entities.SUBJECT;
                 subjectFragment = new EntityFragment<>();

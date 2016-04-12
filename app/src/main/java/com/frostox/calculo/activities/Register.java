@@ -1,12 +1,19 @@
 package com.frostox.calculo.activities;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.util.Map;
 
 import calculo.frostox.com.calculo.R;
 
@@ -16,7 +23,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        final Firebase ref = new Firebase("https://extraclass.firebaseio.com");
         final EditText Fname, Lname, Email, Pass, Cpass;
 
         Fname = (EditText) findViewById(R.id.Fname);
@@ -46,15 +53,29 @@ public class Register extends AppCompatActivity {
                     if (!Cpass.getText().toString().equals(Pass.getText().toString())) {
                         Cpass.setError("Password Doesn't Match!");
                     }
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (Fname.getText().toString().length()!=0 && (isEmailValid(Email.getText().toString())) && Pass.getText().toString().equals(Cpass.getText().toString())) {
-                    Toast.makeText(getApplicationContext(),"Successful Regis",Toast.LENGTH_SHORT).show();
+                if (Fname.getText().toString().length() != 0 && (isEmailValid(Email.getText().toString())) && Pass.getText().toString().equals(Cpass.getText().toString())) {
+                    ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+                        @Override
+                        public void onSuccess(Map<String, Object> result) {
+                            Log.d("SuccessReg", "Successfully created user account with uid: " + result.get("uid"));
+                            Toast.makeText(Register.this, "Successfully created user account", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Register.this, Login.class);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onError(FirebaseError firebaseError) {
+                            Toast.makeText(Register.this, "Please Try Again", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
     }
+
     public static boolean isEmailValid(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }

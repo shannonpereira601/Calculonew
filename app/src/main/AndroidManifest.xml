@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="calculo.frostox.com.calculo">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
     <meta-data
         android:name="com.google.android.gms.wallet.api.enabled"
         android:value="true" />
@@ -16,9 +15,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
         <activity
             android:name="com.frostox.calculo.activities.MainActivity"
             android:label="@string/app_name"
@@ -57,7 +53,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.frostox.calculo.activities.Home" />
         </activity>
-
         <activity
             android:name="com.frostox.calculo.activities.ScreenSlideActivity"
             android:label="@string/title_screen_slide"
@@ -67,6 +62,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.frostox.calculo.activities.Home" />
         </activity>
+        <activity android:name="com.frostox.calculo.activities.Login"></activity>
     </application>
 
 </manifest>

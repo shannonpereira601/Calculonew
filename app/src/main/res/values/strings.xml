@@ -12,6 +12,7 @@
     <string name="title_activity_home">Home</string>
     <string name="signup"><u>Sign Up for Restro</u></string>
 
+    //reg page
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>

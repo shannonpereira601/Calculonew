@@ -12,18 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.client.Firebase;
-import com.frostox.calculo.activities.Home1_Old;
-import com.frostox.calculo.adapters.RecyclerViewAdapter_Old;
-import com.frostox.calculo.interfaces.EntityGetter;
+import com.frostox.calculo.activities.Home;
+import com.frostox.calculo.adapters.Data;
+import com.frostox.calculo.adapters.RecyclerViewAdapter;
 import com.frostox.calculo.pulled_sourses.DividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import calculo.frostox.com.calculo.R;
-import de.greenrobot.dao.AbstractDao;
-import de.greenrobot.dao.Property;
-import de.greenrobot.dao.query.Query;
-import de.greenrobot.dao.query.QueryBuilder;
 
 /*
  * A simple {@link Fragment} subclass.
@@ -33,21 +30,20 @@ import de.greenrobot.dao.query.QueryBuilder;
  * Use the {@link EntityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Long>> extends Fragment {
+public class EntityFragment1 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "id";
     private static final String ARG_PARAM2 = "columnName";
+    List<Data> dummydata;
 
     private RecyclerView recyclerView;
 
     Firebase ref;
 
-    private RecyclerViewAdapter_Old recyclerViewAdapter;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     private RecyclerView.LayoutManager layoutManager;
-
-    L dao;
 
     // TODO: Rename and change types of parameters
     private Long id;
@@ -55,15 +51,10 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
 
     private OnFragmentInteractionListener mListener;
 
-    Home1_Old homeActivity;
+    Home homeActivity;
 
-    public EntityFragment() {
+    public EntityFragment1() {
         // Required empty public constructor
-    }
-
-
-    public void setDao(L dao) {
-        this.dao = dao;
     }
 
     /*
@@ -92,12 +83,10 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
             columnName = getArguments().getString(ARG_PARAM2);
         }
 
-        homeActivity = (Home1_Old) this.getActivity();
+        homeActivity = (Home) this.getActivity();
 
 
     }
-
-    List<K> entities;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,22 +99,9 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
         layoutManager = new LinearLayoutManager(homeActivity);
         recyclerView.setLayoutManager(layoutManager);
 
-        QueryBuilder queryBuilder = dao.queryBuilder();
-        if (id != null) {
-            Property[] properties = dao.getProperties();
-            for (int i = 0; i < properties.length; i++) {
-                if (properties[i].name.equals(columnName)) {//checks which columnNme from bundle is pssed
-                    queryBuilder.where(properties[i].eq(id));//gets ll vlues under the columns
-                    Log.d("onnCreteview", "" + properties[i].name);
-                    break;
-                }
-            }
-        }
+        dummydata = getdata();
 
-        Query query = queryBuilder.build();
-
-        entities = query.list();
-        recyclerViewAdapter = new RecyclerViewAdapter_Old(entities);
+        recyclerViewAdapter = new RecyclerViewAdapter(dummydata);
 
         recyclerView.setAdapter(recyclerViewAdapter);
 
@@ -140,21 +116,15 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
     @Override
     public void onResume() {
         super.onResume();
-        ((RecyclerViewAdapter_Old) recyclerViewAdapter).setOnItemClickListener(new RecyclerViewAdapter_Old.MyClickListener() {
+        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                String nme = entities.get(position).getName();
-                homeActivity.navNext(entities.get(position).getId(), nme);
+                Data data = dummydata.get(position);
+                String nme = data.text;
+                homeActivity.navNext(nme);
                 Log.d("Check", "onnResume clld" + nme);
             }
         });
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -187,5 +157,18 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public List<Data> getdata() {
+        List<Data> names = new ArrayList<>();
+
+        String[] Dummy = {"1","2","3"};
+
+        for (int i = 0; i < Dummy.length; i++) {
+            Data current = new Data();
+            current.text = Dummy[i];
+            names.add(current);
+        }
+        return names;
     }
 }

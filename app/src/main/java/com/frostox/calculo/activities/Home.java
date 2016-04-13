@@ -40,6 +40,7 @@ import com.frostox.calculo.dao.SubjectDao;
 import com.frostox.calculo.dao.TopicDao;
 import com.frostox.calculo.enums.Entities;
 import com.frostox.calculo.fragments.EntityFragment;
+import com.frostox.calculo.fragments.EntityFragment1;
 
 import java.util.List;
 
@@ -47,39 +48,33 @@ import calculo.frostox.com.calculo.R;
 import de.greenrobot.dao.query.Query;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EntityFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EntityFragment1.OnFragmentInteractionListener {
 
     CoordinatorLayout coordinatorLayout;
 
     Firebase ref;
 
-    private DaoSession daoSession;
-
-    private SQLiteDatabase db;
-
     private DrawerLayout drawer;
 
-    private EntityFragment<Standard, StandardDao> standardFragment;
+    private EntityFragment1 standardFragment;
 
-    private EntityFragment<Subject, SubjectDao> subjectFragment;
+    private EntityFragment1 subjectFragment;
 
-    private EntityFragment<Topic, TopicDao> topicFragment;
+    private EntityFragment1 topicFragment;
 
-    private EntityFragment<Mcq, McqDao> mcqFragment;
+    private EntityFragment1 mcqFragment;
 
-    private EntityFragment<Note, NoteDao> noteFragment;
+    private EntityFragment1 noteFragment;
 
     private boolean mcqMode = true;
+
+    private String current = "Standard";
 
     private Entities currentList = Entities.STANDARD;
 
     private TextView courses, subjects, topics, mcqnotes;
 
     private HorizontalScrollView scrollView;
-
-    public DaoSession getDaoSession() {
-        return daoSession;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,18 +98,11 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "calculo-db", null);
-        db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        daoSession = daoMaster.newSession();
-
-        addDummyData();
-
-        standardFragment = new EntityFragment<>();
-        standardFragment.setDao(daoSession.getStandardDao());
+        standardFragment = new EntityFragment1();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in,R.anim.slide_out,R.anim.slide_out,R.anim.slide_in)
                 .replace(R.id.content_frame, standardFragment)
                 .commit();
 
@@ -126,255 +114,13 @@ public class Home extends AppCompatActivity
         drawer.openDrawer(GravityCompat.START);
     }
 
-    /*
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(db!=null&&db.isOpen())
-            db.close();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(db==null || !db.isOpen()){
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "calculo-db", null);
-            db = helper.getWritableDatabase();
-            DaoMaster daoMaster = new DaoMaster(db);
-            daoSession = daoMaster.newSession();
-        }
-    }
-    */
-    public void addDummyData() {
-
-        Query query = daoSession.getStandardDao().queryBuilder().limit(1).build();
-        List<Standard> standards = query.list();
-
-        if (!standards.isEmpty()) return;
-
-        Standard standard = new Standard();
-        standard.setName("9th Grade");
-
-        daoSession.getStandardDao().insertOrReplace(standard);
-
-        Standard standard2 = new Standard();
-        standard2.setName("10th Grade");
-
-        daoSession.getStandardDao().insertOrReplace(standard2);
-
-        Standard standard3 = new Standard();
-        standard3.setName("CET");
-
-        daoSession.getStandardDao().insertOrReplace(standard3);
-
-        Subject subject = new Subject();
-        subject.setName("History");
-        subject.setStandard(standard);
-
-        daoSession.getSubjectDao().insertOrReplace(subject);
-
-
-        Subject subject2 = new Subject();
-        subject2.setName("Geography");
-        subject2.setStandard(standard);
-
-        daoSession.getSubjectDao().insertOrReplace(subject2);
-
-        Subject subject3 = new Subject();
-        subject3.setName("Maths 1");
-        subject3.setStandard(standard);
-
-        daoSession.getSubjectDao().insertOrReplace(subject3);
-
-        subject = new Subject();
-        subject.setName("History");
-        subject.setStandard(standard2);
-
-
-        daoSession.getSubjectDao().insertOrReplace(subject);
-
-
-        subject2 = new Subject();
-        subject2.setName("Geography");
-        subject2.setStandard(standard2);
-
-
-        daoSession.getSubjectDao().insertOrReplace(subject2);
-
-        subject3 = new Subject();
-        subject3.setName("Maths 1");
-        subject3.setStandard(standard2);
-
-        daoSession.getSubjectDao().insertOrReplace(subject3);
-
-        subject = new Subject();
-        subject.setName("Calculus");
-        subject.setStandard(standard3);
-
-
-        daoSession.getSubjectDao().insertOrReplace(subject);
-
-        subject2 = new Subject();
-        subject2.setName("Algebra");
-        subject2.setStandard(standard3);
-
-
-        daoSession.getSubjectDao().insertOrReplace(subject2);
-
-        subject3 = new Subject();
-        subject3.setName("Biology");
-        subject3.setStandard(standard3);
-
-
-        daoSession.getSubjectDao().insertOrReplace(subject3);
-
-        Topic integrals = new Topic();
-        integrals.setName("Integrals");
-        integrals.setSubject(subject);
-
-        daoSession.getTopicDao().insertOrReplace(integrals);
-
-        Topic matrices = new Topic();
-        matrices.setName("Matrices");
-        matrices.setSubject(subject2);
-
-        daoSession.getTopicDao().insertOrReplace(matrices);
-
-        Topic bioChemOfCells = new Topic();
-        bioChemOfCells.setName("Cells");
-        bioChemOfCells.setSubject(subject3);
-
-        daoSession.getTopicDao().insertOrReplace(bioChemOfCells);
-
-        Mcq mcq = new Mcq();
-        mcq.setName("MCQ 1");
-        mcq.setTopic(integrals);
-
-        daoSession.getMcqDao().insertOrReplace(mcq);
-
-        McqItem mcqItem = new McqItem();
-        mcqItem.setQuestion("$$\\int_{0}^{1} {e^{2 \\hspace{1mm} in \\hspace{1mm} x} dx}$$");
-        mcqItem.setOptionA("$$0$$");
-        mcqItem.setOptionB("$$\\frac{1}{2}$$");
-        mcqItem.setOptionC("$$\\frac{1}{3}$$");
-        mcqItem.setOptionD("$$\\frac{1}{4}$$");
-        mcqItem.setAnswer("A");
-        mcqItem.setMcq(mcq);
-
-        daoSession.getMcqItemDao().insertOrReplace(mcqItem);
-
-        mcqItem = new McqItem();
-        mcqItem.setQuestion("$$\\int_{0}^{\\frac{\\pi}{2}} {tan^2 \\hspace{1mm} x \\hspace{1mm} dx}$$");
-        mcqItem.setOptionA("$$1-\\frac{\\pi}{4}$$");
-        mcqItem.setOptionB("$$1+\\frac{\\pi}{4}$$");
-        mcqItem.setOptionC("$$\\frac{\\pi}{4}-1$$");
-        mcqItem.setOptionD("$$\\frac{\\pi}{4}$$");
-        mcqItem.setAnswer("B");
-        mcqItem.setMcq(mcq);
-
-        daoSession.getMcqItemDao().insertOrReplace(mcqItem);
-
-
-        mcqItem = new McqItem();
-        mcqItem.setQuestion("$$\\int_{0}^{\\frac{\\pi}{2}} {\\frac{x \\hspace{1mm} + \\hspace{1mm} sin \\hspace{1mm} x}{1 \\hspace{1mm} + \\hspace{1mm} cos \\hspace{1mm} x} dx}$$");
-        mcqItem.setOptionA("$$-log \\hspace{1mm} 2$$");
-        mcqItem.setOptionB("$$-log \\hspace{1mm} 2$$");
-        mcqItem.setOptionC("$$\\frac{\\pi}{2}$$");
-        mcqItem.setOptionD("$$0$$");
-        mcqItem.setAnswer("C");
-        mcqItem.setMcq(mcq);
-
-        daoSession.getMcqItemDao().insertOrReplace(mcqItem);
-
-
-        Mcq mcq2 = new Mcq();
-        mcq2.setName("MCQ 1");
-        mcq2.setTopic(matrices);
-
-        daoSession.getMcqDao().insertOrReplace(mcq2);
-
-        McqItem mcqItem1 = new McqItem();
-        mcqItem1.setQuestion("$$2\\begin{bmatrix} " +
-                "  1 & 3\\\\" +
-                "  2 & 3\\\\" +
-                "  4 & 6" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionA("$$\\begin{bmatrix} " +
-                "  2 & 16\\\\" +
-                "  4 & 6\\\\" +
-                "  8 & 12" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionB("$$\\begin{bmatrix} " +
-                "  2 & 6\\\\" +
-                "  4 & 6\\\\" +
-                "  8 & 12" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionC("$$\\begin{bmatrix} " +
-                "  2 & 6\\\\" +
-                "  4 & 6\\\\" +
-                "  8 & 2" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionD("$$\\begin{bmatrix} " +
-                "  2 & 6\\\\" +
-                "  1 & 6\\\\" +
-                "  8 & 12" +
-                "\\end{bmatrix}$$");
-
-        mcqItem1.setAnswer("B");
-        mcqItem1.setMcq(mcq2);
-
-        daoSession.getMcqItemDao().insertOrReplace(mcqItem1);
-
-        mcqItem1 = new McqItem();
-        mcqItem1.setQuestion("$$3\\begin{bmatrix} " +
-                "  1 & 1\\\\" +
-                "  1 & 1\\\\" +
-                "  3 & 3" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionA("$$\\begin{bmatrix} " +
-                "  2 & 16\\\\" +
-                "  1 & 1\\\\" +
-                "  1 & 1" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionB("$$\\begin{bmatrix} " +
-                "  1 & 1\\\\" +
-                "  1 & 1\\\\" +
-                "  1 & 1" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionC("$$\\begin{bmatrix} " +
-                "  2 & 6\\\\" +
-                "  4 & 6\\\\" +
-                "  8 & 2" +
-                "\\end{bmatrix}$$");
-        mcqItem1.setOptionD("$$\\begin{bmatrix} " +
-                "  3 & 3\\\\" +
-                "  3 & 3\\\\" +
-                "  9 & 9" +
-                "\\end{bmatrix}$$");
-
-        mcqItem1.setAnswer("D");
-        mcqItem1.setMcq(mcq2);
-
-        daoSession.getMcqItemDao().insertOrReplace(mcqItem1);
-
-
-        Note note = new Note();
-        note.setName("BioChemestry of Cells");
-        note.setTopic(bioChemOfCells);
-        note.setFile("");
-
-        daoSession.getNoteDao().insertOrReplace(note);
-
-
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (currentList != Entities.STANDARD) {
+        } else if (!current.equals("Standard")) {
             Log.d("Check", "onnBckClld");
             navPrev();
         } else {
@@ -424,13 +170,13 @@ public class Home extends AppCompatActivity
 
         if (id == R.id.nav_mcq) {
             mcqMode = true;
-            if (currentList == Entities.MCQ)
+            if (current.equals("MCQ"))
                 navPrev();
 
             //TODO Fragment operations
         } else if (id == R.id.nav_notes) {
             mcqMode = false;
-            if (currentList == Entities.MCQ)
+            if (current.equals("Note"))
                 navPrev();
             //TODO Fragement operations
         } else if (id == R.id.nav_logout) {
@@ -461,27 +207,20 @@ public class Home extends AppCompatActivity
     }
 
 
-    public void navNext(Long id, String name) {
+    public void navNext(String name) {
         name = name.toUpperCase();
-        switch (currentList) {
-            case STANDARD:
+        switch (current) {
+            case "Standard":
                 if (name.equals("9TH GRADE")) {
                     name = "9th GRADE";
                 } else if (name.equals("10TH GRADE")) {
                     name = "10th GRADE";
                 }
-                currentList = Entities.SUBJECT;
-                subjectFragment = new EntityFragment<>();
-                subjectFragment.setDao(daoSession.getSubjectDao());
-
-                Bundle bundle = new Bundle();
-                bundle.putLong("id", id);
-                bundle.putString("columnName", "standardId");
-                // set Fragmentclass Arguments
-                subjectFragment.setArguments(bundle);
-
+                current = "Subject";
+                subjectFragment = new EntityFragment1();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
                         .replace(R.id.content_frame, subjectFragment).addToBackStack("Standard")
                         .commit();
 
@@ -492,19 +231,12 @@ public class Home extends AppCompatActivity
                 mcqnotes.setVisibility(View.GONE);
 
                 break;
-            case SUBJECT:
-                currentList = Entities.TOPIC;
-                topicFragment = new EntityFragment<>();
-                topicFragment.setDao(daoSession.getTopicDao());
-
-                bundle = new Bundle();
-                bundle.putLong("id", id);
-                bundle.putString("columnName", "subjectId");
-                // set Fragmentclass Arguments
-                topicFragment.setArguments(bundle);
-
+            case "Subject":
+                current = "Topic";
+                topicFragment = new EntityFragment1();
                 fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
                         .replace(R.id.content_frame, topicFragment).addToBackStack("Subject")
                         .commit();
 
@@ -513,20 +245,13 @@ public class Home extends AppCompatActivity
                 mcqnotes.setVisibility(View.GONE);
 
                 break;
-            case TOPIC:
+            case "Topic":
                 if (mcqMode) {
-                    currentList = Entities.MCQ;
-                    mcqFragment = new EntityFragment<>();
-                    mcqFragment.setDao(daoSession.getMcqDao());
-
-                    bundle = new Bundle();
-                    bundle.putLong("id", id);
-                    bundle.putString("columnName", "topicId");
-                    // set Fragmentclass Arguments
-                    mcqFragment.setArguments(bundle);
-
+                    current = "MCQ";
+                    mcqFragment = new EntityFragment1();
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
                             .replace(R.id.content_frame, mcqFragment).addToBackStack("Topic")
                             .commit();
 
@@ -534,18 +259,11 @@ public class Home extends AppCompatActivity
                     mcqnotes.setVisibility(View.VISIBLE);
                     mcqnotes.setText("MCQs >");
                 } else {
-                    currentList = Entities.NOTE;
-                    noteFragment = new EntityFragment<>();
-                    noteFragment.setDao(daoSession.getNoteDao());
-
-                    bundle = new Bundle();
-                    bundle.putLong("id", id);
-                    bundle.putString("columnName", "topicId");
-                    // set Fragmentclass Arguments
-                    noteFragment.setArguments(bundle);
-
+                    current = "Note";
+                    noteFragment = new EntityFragment1();
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
                             .replace(R.id.content_frame, noteFragment).addToBackStack("Topic")
                             .commit();
 
@@ -556,15 +274,16 @@ public class Home extends AppCompatActivity
 
 
                 break;
-            case MCQ:
+            case "MCQ":
+
                 //Goto mcq activity
                 Intent intent = new Intent(this, McqActivity.class);
                 intent.putExtra("name", name);
-                intent.putExtra("id", id);
+                // intent.putExtra("id", id);
 
                 startActivity(intent);
                 break;
-            case NOTE:
+            case "Note":
                 //Goto note activity
                 intent = new Intent(this, ScreenSlideActivity.class);
                 intent.putExtra("name", name);
@@ -582,28 +301,28 @@ public class Home extends AppCompatActivity
     public void navPrev() {
 
 
-        switch (currentList) {
+        switch (current) {
 
-            case SUBJECT:
-                currentList = Entities.STANDARD;
+            case "Subject":
+                current = "Standard";
                 subjects.setVisibility(View.GONE);
                 courses.setText("COURSES >");
                 break;
 
-            case TOPIC:
-                currentList = Entities.SUBJECT;
+            case "Topic":
+                current = "Subject";
                 topics.setVisibility(View.GONE);
                 subjects.setText("SUBJECTS >");
                 break;
 
-            case MCQ:
-                currentList = Entities.TOPIC;
+            case "MCQ":
+                current = "Topic";
                 mcqnotes.setVisibility(View.GONE);
                 topics.setText("TOPICS >");
                 break;
 
-            case NOTE:
-                currentList = Entities.TOPIC;
+            case "Note":
+                current = "Topic";
                 mcqnotes.setVisibility(View.GONE);
                 topics.setText("TOPICS >");
 

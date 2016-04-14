@@ -10,20 +10,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
-import com.frostox.calculo.Nodes.Courses;
+import com.firebase.ui.FirebaseRecyclerAdapter;
+import com.frostox.calculo.Entities.Standard;
+import com.frostox.calculo.Entities.Subject;
+import com.frostox.calculo.Nodes.Standards;
 import com.frostox.calculo.Nodes.Subjects;
+import com.frostox.calculo.Nodes.Topics;
 import com.frostox.calculo.activities.Home;
 import com.frostox.calculo.adapters.Data;
-import com.frostox.calculo.adapters.RVTask;
-import com.frostox.calculo.adapters.RecyclerViewAdapter;
-import com.frostox.calculo.pulled_sourses.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,25 +43,28 @@ public class EntityFragment1 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "id";
-    private static final String ARG_PARAM2 = "columnName";
+    private static final String ARG_PARAM2 = "current";
     List<Data> data;
 
     private RecyclerView recyclerView;
 
     Firebase ref;
 
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private FirebaseRecyclerAdapter recyclerAdapter;
 
     private RecyclerView.LayoutManager layoutManager;
 
     // TODO: Rename and change types of parameters
-    private Long id;
-    private String columnName;
+    private String id;
+    private String current = "Standard";
 
-    private String[] courses = {"10th","CET Foundation","11th Science","12th Sci"};
-    private String[] subjects;
+    private String[] courses = {"10th", "CET Foundation", "11th Science", "12th Sci"};
+    private String[] key;
+    private String name;
 
     private OnFragmentInteractionListener mListener;
+
+    private static MyClickListener myClickListener;
 
     Home homeActivity;
 
@@ -89,12 +93,6 @@ public class EntityFragment1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-       //     id = getArguments().getLong(ARG_PARAM1);
-            columnName = getArguments().getString(ARG_PARAM2);
-        }
-
-
         homeActivity = (Home) this.getActivity();
 
 
@@ -105,63 +103,177 @@ public class EntityFragment1 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_standard, container, false);
+
+        if (getArguments() != null) {
+            id = getArguments().getString(ARG_PARAM1);
+            Log.d("onnCreate", id);
+            current = getArguments().getString(ARG_PARAM2);
+        }
+
         ref = new Firebase("https://extraclass.firebaseio.com/");
 
-        // Query query = ref.orderByChild("name").equalTo("10th");
+        recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
 
-        Firebase cref = ref.child("courses");
-        Firebase sref = ref.child("subjects");
+        if (current.equals("Standard")) {
+            final Firebase standardref = ref.child("courses");
+            getKey(standardref);
+            recyclerAdapter = new FirebaseRecyclerAdapter<Standards, DataObjectHolder>(Standards.class, R.layout.recycler_view_item, DataObjectHolder.class, standardref) {
+                @Override
+                public void populateViewHolder(DataObjectHolder dataObjectHolder, final Standards standards, final int position) {
+                    dataObjectHolder.label.setText(standards.getName());
+                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            name = standards.getName();
+                            myClickListener.onItemClick(position, v);
 
-        cref.addValueEventListener(new ValueEventListener() {
-            int count = 0;
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int lenghth = (int) dataSnapshot.getChildrenCount();
-                courses = new String[lenghth];
-
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String key = dataSnapshot.getKey();
-                    Courses course = postSnapshot.getValue(Courses.class);
-                    courses[count] = course.getName();
-                    System.out.println("onncourses " + " " + course.getName() + " " + key);
-                    count++;
+                        }
+                    });
                 }
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
+            };
+        } else if (current.equals("Subject")) {
 
 
+            Firebase subjectref = ref.child("subjects");
+            Query query = subjectref.orderByChild("course").equalTo(id);
+            getKey(query);
 
-        sref.addValueEventListener(new ValueEventListener() {
-            int count = 0;
+            recyclerAdapter = new FirebaseRecyclerAdapter<Subjects, DataObjectHolder>(Subjects.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+                @Override
+                public void populateViewHolder(DataObjectHolder dataObjectHolder, final Subjects subject, final int position) {
+                    //   if(subject.getCourse().equals(id)) {
+                    dataObjectHolder.label.setText(subject.getName());
+                    //  }
+                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            name = subject.getName();
+                            myClickListener.onItemClick(position, v);
+                        }
+                    });
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int lenghth = (int) dataSnapshot.getChildrenCount();
-                subjects = new String[lenghth];
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Subjects subject = postSnapshot.getValue(Subjects.class);
-                    subjects[count] = subject.getName();
-                    System.out.println("onnsubject " + subject.getName() + " " + subject.getCourse());
-                    count++;
                 }
-            }
+            };
+        } else if (current.equals("Topic")) {
+            Firebase topicref = ref.child("topics");
+            Query query = topicref.orderByChild("subject").equalTo(id);
+            getKey(query);
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
+            recyclerAdapter = new FirebaseRecyclerAdapter<Topics, DataObjectHolder>(Topics.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+                @Override
+                public void populateViewHolder(DataObjectHolder dataObjectHolder, final Topics topic, final int position) {
 
 
+                    //   if(subject.getCourse().equals(id)) {
+                    dataObjectHolder.label.setText(topic.getName());
+                    //  }
+                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            name = topic.getName();
+                            myClickListener.onItemClick(position, v);
+                        }
+                    });
 
+                }
+            };
+
+
+        }
+
+        recyclerView.setAdapter(recyclerAdapter);
+
+/*
+        if (id != null) {
+            Log.d("onnKEY2", id);
+            Firebase qref = ref.child("subjects");
+            Query query = qref.orderByChild("course").equalTo(id);
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int length = (int) dataSnapshot.getChildrenCount();
+                    subjects = new String[length];
+                    key = new String[length];
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        Subjects subject = postSnapshot.getValue(Subjects.class);
+                        //    if (subject.getCourse().equals(id)) {
+                        System.out.println("onnksubject " + subject.getName() + " " + subject.getCourse());
+                        // }
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
+        if (current.equals("Standard")) {
+            Firebase cref = ref.child("courses");
+
+            cref.addValueEventListener(new ValueEventListener() {
+                int count = 0;
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int lenghth = (int) dataSnapshot.getChildrenCount();
+                    courses = new String[lenghth];
+                    key = new String[lenghth];
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        key[count] = postSnapshot.getKey();
+                        Courses course = postSnapshot.getValue(Courses.class);
+                        courses[count] = course.getName();
+                        //  System.out.println("onncourses " + " " + course.getName() + " " + key[count]);
+                        count++;
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    System.out.println("The read failed: " + firebaseError.getMessage());
+                }
+            });
+        } else if (current.equals("Subject")) {
+            Firebase sref = ref.child("subjects");
+            sref.addValueEventListener(new ValueEventListener() {
+
+                int count = 0;
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    int length = (int) dataSnapshot.getChildrenCount();
+                    subjects = new String[length];
+                    key = new String[length];
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        Subjects subject = postSnapshot.getValue(Subjects.class);
+                        key[count] = postSnapshot.getKey();
+
+
+                        //    if (subject.getCourse().equals(id)) {
+                        //System.out.println("onnsubject " + subject.getName() + " " + subject.getCourse());
+                        // }
+                        count++;
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    System.out.println("The read failed: " + firebaseError.getMessage());
+                }
+            });
+        }
         recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(homeActivity);
@@ -177,21 +289,47 @@ public class EntityFragment1 extends Fragment {
                 new DividerItemDecoration(this.getActivity(), LinearLayoutManager.VERTICAL);
 
         recyclerView.addItemDecoration(itemDecoration);
-        Log.d("onnTest", "1.5");
+        Log.d("onnTest", "1.5");*/
+
+
         return view;
 
     }
 
+    public void getKey(Query query) {
+       query.addValueEventListener(new ValueEventListener() {
+            int count = 0;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int length = (int) dataSnapshot.getChildrenCount();
+                key = new String[length];
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    key[count] = postSnapshot.getKey();
+                    count++;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+    }
+
+    public void setOnItemClickListener(MyClickListener myClickListener) {
+        this.myClickListener = myClickListener;
+    }
+
     @Override
     public void onResume() {
+
         super.onResume();
-        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.MyClickListener() {
+        setOnItemClickListener(new MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Data datatext = data.get(position);
-                String nme = datatext.text;
-                homeActivity.navNext(nme);
-                Log.d("Check", "onnResume clld" + nme);
+                homeActivity.navNext(key[position], name);
             }
         });
     }
@@ -213,6 +351,12 @@ public class EntityFragment1 extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recyclerAdapter.cleanup();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -228,15 +372,18 @@ public class EntityFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public List<Data> getdata() {
-        List<Data> names = new ArrayList<>();
-        Log.d("onnTest","first");
+    public static class DataObjectHolder extends RecyclerView.ViewHolder {
+        TextView label;
 
-        for (int i = 0; i < courses.length; i++) {
-            Data current = new Data(courses[i]);
-            current.text = courses[i];
-            names.add(current);
+
+        public DataObjectHolder(View itemView) {
+            super(itemView);
+            label = (TextView) itemView.findViewById(R.id.recycler_view_item_text);
         }
-        return names;
+
+    }
+
+    public interface MyClickListener {
+        public void onItemClick(int position, View v);
     }
 }

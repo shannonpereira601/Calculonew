@@ -14,7 +14,7 @@ import calculo.frostox.com.calculo.R;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.DataObjectHolder> {
 
-    private List<Data> mDataset;
+    private List<Data>mDataset;
     private static MyClickListener myClickListener;
 
     public RecyclerViewAdapter(List<Data> myDataset) {

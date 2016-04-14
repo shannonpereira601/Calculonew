@@ -8,9 +8,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:padding="6dp"
+        android:padding="12dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Recycler View Item"
         android:id="@+id/recycler_view_item_text"

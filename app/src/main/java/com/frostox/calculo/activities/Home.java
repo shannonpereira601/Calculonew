@@ -83,6 +83,7 @@ public class Home extends AppCompatActivity
 
         Firebase.setAndroidContext(this);
         ref = new Firebase("https://extraclass.firebaseio.com/");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -206,7 +207,7 @@ public class Home extends AppCompatActivity
     }
 
 
-    public void navNext(String name) {
+    public void navNext(String key, String name) {
         name = name.toUpperCase();
         switch (current) {
             case "Standard":
@@ -217,6 +218,13 @@ public class Home extends AppCompatActivity
                 }
                 current = "Subject";
                 subjectFragment = new EntityFragment1();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("current", current);
+                bundle.putString("id", key);
+                // set Fragmentclass Arguments
+                subjectFragment.setArguments(bundle);
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
@@ -233,6 +241,11 @@ public class Home extends AppCompatActivity
             case "Subject":
                 current = "Topic";
                 topicFragment = new EntityFragment1();
+                bundle = new Bundle();
+                bundle.putString("current", current);
+                bundle.putString("id", key);
+                // set Fragmentclass Arguments
+                topicFragment.setArguments(bundle);
                 fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
@@ -248,6 +261,10 @@ public class Home extends AppCompatActivity
                 if (mcqMode) {
                     current = "MCQ";
                     mcqFragment = new EntityFragment1();
+                    bundle = new Bundle();
+                    bundle.putString("current", current);
+                    bundle.putString("id", key);
+                    mcqFragment.setArguments(bundle);
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)

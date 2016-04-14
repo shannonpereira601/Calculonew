@@ -20,6 +20,8 @@ import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.frostox.calculo.Entities.Standard;
 import com.frostox.calculo.Entities.Subject;
+import com.frostox.calculo.Nodes.MCQs;
+import com.frostox.calculo.Nodes.Notes;
 import com.frostox.calculo.Nodes.Standards;
 import com.frostox.calculo.Nodes.Subjects;
 import com.frostox.calculo.Nodes.Topics;
@@ -153,7 +155,6 @@ public class EntityFragment1 extends Fragment {
                             myClickListener.onItemClick(position, v);
                         }
                     });
-
                 }
             };
         } else if (current.equals("Topic")) {
@@ -179,9 +180,53 @@ public class EntityFragment1 extends Fragment {
 
                 }
             };
+        }else if (current.equals("MCQ")) {
+            Firebase mcqref = ref.child("mcqs");
+            Query query = mcqref.orderByChild("topic").equalTo(id);
+            getKey(query);
+
+            recyclerAdapter = new FirebaseRecyclerAdapter<MCQs, DataObjectHolder>(MCQs.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+                @Override
+                public void populateViewHolder(DataObjectHolder dataObjectHolder, final MCQs mcqs, final int position) {
 
 
+                    //   if(subject.getCourse().equals(id)) {
+                    dataObjectHolder.label.setText(mcqs.getQuestion());
+                    //  }
+                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            name = mcqs.getQuestion();
+                            myClickListener.onItemClick(position, v);
+                        }
+                    });
+
+                }
+            };
+        }else if (current.equals("Note")) {
+            Firebase noteref = ref.child("mcqs");
+            Query query = noteref.orderByChild("topic").equalTo(id);
+            getKey(query);
+
+            recyclerAdapter = new FirebaseRecyclerAdapter<Notes, DataObjectHolder>(Notes.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+                @Override
+                public void populateViewHolder(DataObjectHolder dataObjectHolder, final Notes note, final int position) {
+
+                    //   if(subject.getCourse().equals(id)) {
+                    dataObjectHolder.label.setText(note.getName());
+                    //  }
+                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            name = note.getName();
+                            myClickListener.onItemClick(position, v);
+                        }
+                    });
+
+                }
+            };
         }
+
 
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -297,7 +342,7 @@ public class EntityFragment1 extends Fragment {
     }
 
     public void getKey(Query query) {
-       query.addValueEventListener(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             int count = 0;
 
             @Override

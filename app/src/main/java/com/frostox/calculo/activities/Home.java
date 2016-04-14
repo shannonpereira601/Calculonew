@@ -102,7 +102,6 @@ public class Home extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_in,R.anim.slide_out,R.anim.slide_out,R.anim.slide_in)
                 .replace(R.id.content_frame, standardFragment)
                 .commit();
 
@@ -220,7 +219,7 @@ public class Home extends AppCompatActivity
                 subjectFragment = new EntityFragment1();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
+                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
                         .replace(R.id.content_frame, subjectFragment).addToBackStack("Standard")
                         .commit();
 
@@ -236,7 +235,7 @@ public class Home extends AppCompatActivity
                 topicFragment = new EntityFragment1();
                 fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
+                        .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
                         .replace(R.id.content_frame, topicFragment).addToBackStack("Subject")
                         .commit();
 
@@ -251,7 +250,7 @@ public class Home extends AppCompatActivity
                     mcqFragment = new EntityFragment1();
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
+                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
                             .replace(R.id.content_frame, mcqFragment).addToBackStack("Topic")
                             .commit();
 
@@ -263,7 +262,7 @@ public class Home extends AppCompatActivity
                     noteFragment = new EntityFragment1();
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out, R.anim.slide_in)
+                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)
                             .replace(R.id.content_frame, noteFragment).addToBackStack("Topic")
                             .commit();
 

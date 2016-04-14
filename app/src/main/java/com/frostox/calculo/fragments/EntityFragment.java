@@ -115,7 +115,7 @@ public class EntityFragment<K extends EntityGetter, L extends AbstractDao<K, Lon
             Property[] properties = dao.getProperties();
             for (int i = 0; i < properties.length; i++) {
                 if (properties[i].name.equals(columnName)) {//checks which columnNme from bundle is pssed
-                    queryBuilder.where(properties[i].eq(id));//gets ll vlues under the columns
+                    queryBuilder.where(properties[i].eq(id));//gets all vlues under the columns
                     Log.d("onnCreteview", "" + properties[i].name);
                     break;
                 }

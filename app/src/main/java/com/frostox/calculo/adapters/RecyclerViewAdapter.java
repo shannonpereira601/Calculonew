@@ -38,13 +38,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             myClickListener.onItemClick(getPosition(), v);
         }
+
     }
 
     public void setOnItemClickListener(MyClickListener myClickListener) {
         this.myClickListener = myClickListener;
     }
-
-
 
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent,
@@ -81,4 +80,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public interface MyClickListener {
         public void onItemClick(int position, View v);
     }
+
+
 }

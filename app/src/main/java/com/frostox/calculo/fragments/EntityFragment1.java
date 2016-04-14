@@ -11,9 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
+import com.frostox.calculo.Nodes.Courses;
+import com.frostox.calculo.Nodes.Subjects;
 import com.frostox.calculo.activities.Home;
 import com.frostox.calculo.adapters.Data;
+import com.frostox.calculo.adapters.RVTask;
 import com.frostox.calculo.adapters.RecyclerViewAdapter;
 import com.frostox.calculo.pulled_sourses.DividerItemDecoration;
 
@@ -35,7 +43,7 @@ public class EntityFragment1 extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "id";
     private static final String ARG_PARAM2 = "columnName";
-    List<Data> dummydata;
+    List<Data> data;
 
     private RecyclerView recyclerView;
 
@@ -48,6 +56,9 @@ public class EntityFragment1 extends Fragment {
     // TODO: Rename and change types of parameters
     private Long id;
     private String columnName;
+
+    private String[] courses = {"10th","CET Foundation","11th Science","12th Sci"};
+    private String[] subjects;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,9 +90,10 @@ public class EntityFragment1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            id = getArguments().getLong(ARG_PARAM1);
+       //     id = getArguments().getLong(ARG_PARAM1);
             columnName = getArguments().getString(ARG_PARAM2);
         }
+
 
         homeActivity = (Home) this.getActivity();
 
@@ -93,15 +105,71 @@ public class EntityFragment1 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_standard, container, false);
-        Firebase.setAndroidContext(getContext());
-        ref = new Firebase("https://extraclass.firebaseio.com/courses");
+        ref = new Firebase("https://extraclass.firebaseio.com/");
+
+        // Query query = ref.orderByChild("name").equalTo("10th");
+
+        Firebase cref = ref.child("courses");
+        Firebase sref = ref.child("subjects");
+
+        cref.addValueEventListener(new ValueEventListener() {
+            int count = 0;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int lenghth = (int) dataSnapshot.getChildrenCount();
+                courses = new String[lenghth];
+
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String key = dataSnapshot.getKey();
+                    Courses course = postSnapshot.getValue(Courses.class);
+                    courses[count] = course.getName();
+                    System.out.println("onncourses " + " " + course.getName() + " " + key);
+                    count++;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+
+
+        sref.addValueEventListener(new ValueEventListener() {
+            int count = 0;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int lenghth = (int) dataSnapshot.getChildrenCount();
+                subjects = new String[lenghth];
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Subjects subject = postSnapshot.getValue(Subjects.class);
+                    subjects[count] = subject.getName();
+                    System.out.println("onnsubject " + subject.getName() + " " + subject.getCourse());
+                    count++;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+
+
         recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(homeActivity);
         recyclerView.setLayoutManager(layoutManager);
 
-        dummydata = getdata();
+        data = getdata();
 
-        recyclerViewAdapter = new RecyclerViewAdapter(dummydata);
+        recyclerViewAdapter = new RecyclerViewAdapter(data);
 
         recyclerView.setAdapter(recyclerViewAdapter);
 
@@ -109,8 +177,9 @@ public class EntityFragment1 extends Fragment {
                 new DividerItemDecoration(this.getActivity(), LinearLayoutManager.VERTICAL);
 
         recyclerView.addItemDecoration(itemDecoration);
-
+        Log.d("onnTest", "1.5");
         return view;
+
     }
 
     @Override
@@ -119,8 +188,8 @@ public class EntityFragment1 extends Fragment {
         recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Data data = dummydata.get(position);
-                String nme = data.text;
+                Data datatext = data.get(position);
+                String nme = datatext.text;
                 homeActivity.navNext(nme);
                 Log.d("Check", "onnResume clld" + nme);
             }
@@ -161,12 +230,11 @@ public class EntityFragment1 extends Fragment {
 
     public List<Data> getdata() {
         List<Data> names = new ArrayList<>();
+        Log.d("onnTest","first");
 
-        String[] Dummy = {"1","2","3"};
-
-        for (int i = 0; i < Dummy.length; i++) {
-            Data current = new Data();
-            current.text = Dummy[i];
+        for (int i = 0; i < courses.length; i++) {
+            Data current = new Data(courses[i]);
+            current.text = courses[i];
             names.add(current);
         }
         return names;

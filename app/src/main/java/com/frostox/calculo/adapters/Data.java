@@ -5,4 +5,18 @@ package com.frostox.calculo.adapters;
  */
 public class Data{
     public String text;
+
+    public Data(String text)
+    {
+        this.setText(text);
+    }
+
+    public String getText(){
+        return text;
+    }
+
+    public void setText(String text){
+        this.text = text;
+    }
+
 }

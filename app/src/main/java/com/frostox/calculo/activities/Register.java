@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -59,7 +60,7 @@ public class Register extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (Fname.getText().toString().length() != 0 && (isEmailValid(Email.getText().toString())) && Pass.getText().toString().equals(Cpass.getText().toString())) {
-                    ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+                    /*ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
                         @Override
                         public void onSuccess(Map<String, Object> result) {
                             Log.d("SuccessReg", "Successfully created user account with uid: " + result.get("uid"));
@@ -73,9 +74,42 @@ public class Register extends AppCompatActivity {
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
-                            Toast.makeText(Register.this, "Please Try Again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Register.this, "Please Try Again", Toast.LENGTH_LONG).show();
+                        }
+                    });*/
+
+                    ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+                        Boolean status;
+
+                        @Override
+                        public void onSuccess(Map<String, Object> stringObjectMap) {
+                            Toast.makeText(getApplicationContext(), "Registeration Successful", Toast.LENGTH_LONG).show();
+                            ref.authWithPassword(Email.getText().toString(), Pass.getText().toString(), new Firebase.AuthResultHandler() {
+                                @Override
+                                public void onAuthenticated(AuthData authData) {
+                                    User user = new User(Email.getText().toString(),  authData.getUid(), Fname.getText().toString(), status);
+                                    Firebase users = ref.child("users");
+                                    users.child(authData.getUid());
+                                    users.push().setValue(user);
+                                    Intent intent = new Intent(Register.this, Login.class);
+                                    startActivity(intent);
+                                    //changed this file
+                                }
+
+                                @Override
+                                public void onAuthenticationError(FirebaseError firebaseError) {
+                                    Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onError(FirebaseError firebaseError) {
+                            Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
+
                 }
             }
         });
@@ -84,27 +118,34 @@ public class Register extends AppCompatActivity {
 
     public class User {
         private String fullName;
-        private String password;
-        private String emailid;
+        private String email;
         private String uid;
-        public User() {}
-        public User(String fullName, String password, String uid, String emailid) {
+        private Boolean blocked;
+
+        public User() {
+        }
+
+        public User(String email, String uid, String fullName, Boolean blocked) {
             this.fullName = fullName;
-            this.password = password;
             this.uid = uid;
-            this.emailid = emailid;
+            this.email = email;
+            this.blocked = blocked;
         }
-        public String getPassword() {
-            return password;
-        }
+
         public String getFullName() {
             return fullName;
         }
+
         public String getUid() {
             return uid;
         }
-        public String getEmailid(){
-            return emailid;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public Boolean getBlocked() {
+            return false;
         }
     }
 

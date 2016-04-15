@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -186,8 +187,9 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             Firebase mcqref = ref.child("mcqs");
             Query query = mcqref.orderByChild("topic").equalTo(id);
             getKey(query);
+            LinearLayout ll = (LinearLayout)view.findViewById(R.id.ll);
+            ll.setVisibility(View.VISIBLE);
             Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-            spinner.setVisibility(View.VISIBLE);
 
             List<String> categories = new ArrayList<String>();
             categories.add("10");

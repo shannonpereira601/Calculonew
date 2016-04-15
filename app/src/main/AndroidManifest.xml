@@ -17,6 +17,10 @@
             android:name="com.frostox.calculo.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
@@ -34,17 +38,13 @@
             android:label="@string/title_activity_home"
             android:parentActivityName="com.frostox.calculo.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.frostox.calculo.activities.MainActivity" />
         </activity>
         <activity
-            android:name="com.frostox.calculo.activities.McqActivity"
+            android:name="com.frostox.calculo.activities.McqActivity_old"
             android:label="@string/title_activity_mcq"
             android:parentActivityName="com.frostox.calculo.activities.Home"
             android:theme="@style/AppTheme.NoActionBar">

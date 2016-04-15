@@ -1,7 +1,6 @@
 package com.frostox.calculo.activities;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,37 +17,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
-import com.frostox.calculo.Entities.Mcq;
-import com.frostox.calculo.Entities.McqItem;
-import com.frostox.calculo.Entities.Note;
-import com.frostox.calculo.Entities.Standard;
-import com.frostox.calculo.Entities.Subject;
-import com.frostox.calculo.Entities.Topic;
-import com.frostox.calculo.dao.DaoMaster;
-import com.frostox.calculo.dao.DaoSession;
-import com.frostox.calculo.dao.McqDao;
-import com.frostox.calculo.dao.NoteDao;
-import com.frostox.calculo.dao.StandardDao;
-import com.frostox.calculo.dao.SubjectDao;
-import com.frostox.calculo.dao.TopicDao;
+
 import com.frostox.calculo.enums.Entities;
-import com.frostox.calculo.fragments.EntityFragment;
 import com.frostox.calculo.fragments.EntityFragment1;
 
-import java.util.List;
-
 import calculo.frostox.com.calculo.R;
-import de.greenrobot.dao.query.Query;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EntityFragment1.OnFragmentInteractionListener {
+
 
     CoordinatorLayout coordinatorLayout;
 
@@ -297,7 +279,7 @@ public class Home extends AppCompatActivity
             case "MCQ":
 
                 //Goto mcq activity
-                Intent intent = new Intent(this, McqActivity.class);
+                Intent intent = new Intent(this, McqActivity_old.class);
                 intent.putExtra("name", name);
                 // intent.putExtra("id", id);
 
@@ -307,6 +289,7 @@ public class Home extends AppCompatActivity
                 //Goto note activity
                 intent = new Intent(this, ScreenSlideActivity.class);
                 intent.putExtra("name", name);
+                intent.putExtra("id", key);
                 startActivity(intent);
         }
 

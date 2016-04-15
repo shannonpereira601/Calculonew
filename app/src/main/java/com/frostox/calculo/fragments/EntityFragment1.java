@@ -67,6 +67,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     private String[] courses = {"10th", "CET Foundation", "11th Science", "12th Sci"};
     private String[] key;
     private String name;
+    boolean rvexists;
 
     private OnFragmentInteractionListener mListener;
 
@@ -100,14 +101,13 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeActivity = (Home) this.getActivity();
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        rvexists = true;
         View view = inflater.inflate(R.layout.fragment_standard, container, false);
 
         if (getArguments() != null) {
@@ -117,7 +117,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         }
 
         ref = new Firebase("https://extraclass.firebaseio.com/");
-
         recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(homeActivity));
 
@@ -137,7 +136,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                         }
                     });
                 }
-
             };
         } else if (current.equals("Subject")) {
 
@@ -184,6 +182,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 }
             };
         } else if (current.equals("MCQ")) {
+           rvexists = false;
             Firebase mcqref = ref.child("mcqs");
             Query query = mcqref.orderByChild("topic").equalTo(id);
             getKey(query);
@@ -220,6 +219,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
                 }
             };*/
+
         } else if (current.equals("Note")) {
             Firebase noteref = ref.child("notes");
             Query query = noteref.orderByChild("topic").equalTo(id);
@@ -243,7 +243,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 }
             };
         }
-
 
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -392,7 +391,9 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         setOnItemClickListener(new MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                homeActivity.navNext(key[position], name);
+                if(key[position]!=null) {
+                    homeActivity.navNext(key[position], name);
+                }
             }
         });
     }
@@ -417,7 +418,9 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onDestroy() {
         super.onDestroy();
-        recyclerAdapter.cleanup();
+        if(rvexists) {
+            recyclerAdapter.cleanup();
+        }
     }
 
     @Override

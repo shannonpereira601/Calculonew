@@ -18,9 +18,11 @@ package com.frostox.calculo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import calculo.frostox.com.calculo.R;
@@ -31,19 +33,22 @@ public class ScreenSlidePageFragment extends Fragment {
      * The argument key for the page number this fragment represents.
      */
     public static final String ARG_PAGE = "page";
+    public static final String ARG_NOTEID = "note_id";
 
     /**
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
     private int mPageNumber;
+    private String noteid;
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static ScreenSlidePageFragment create(int pageNumber) {
+    public static ScreenSlidePageFragment create(int pageNumber, String id) {
         ScreenSlidePageFragment fragment = new ScreenSlidePageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
+        args.putString(ARG_NOTEID, id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +60,8 @@ public class ScreenSlidePageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
+        noteid = getArguments().getString(ARG_NOTEID);
+
     }
 
     @Override
@@ -63,6 +70,11 @@ public class ScreenSlidePageFragment extends Fragment {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
+
+        WebView webView = (WebView)rootView.findViewById(R.id.web);
+
+        webView.loadUrl("https://www.frostox.com/extraclass/uploads/"+noteid);
+        Log.d("onn1CreateViewfrag", "https://www.frostox.com/extraclass/uploads/"+noteid);
 
         switch (getPageNumber()){
             case 0:

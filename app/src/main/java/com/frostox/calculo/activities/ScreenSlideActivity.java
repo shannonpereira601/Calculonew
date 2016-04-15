@@ -26,6 +26,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,11 +39,10 @@ import calculo.frostox.com.calculo.R;
  * Demonstrates a "screen-slide" animation using a {@link ViewPager}. Because {@link ViewPager}
  * automatically plays such an animation when calling {@link ViewPager#setCurrentItem(int)}, there
  * isn't any animation-specific code in this sample.
- *
+ * <p/>
  * <p>This sample shows a "next" button that advances the user to the next step in a wizard,
  * animating the current screen out (to the left) and the next screen in (from the right). The
  * reverse animation is played when the user presses the "previous" button.</p>
- *
  */
 public class ScreenSlideActivity extends AppCompatActivity {
     /**
@@ -55,6 +55,7 @@ public class ScreenSlideActivity extends AppCompatActivity {
      * and next wizard steps.
      */
     private ViewPager mPager;
+    String name, id;
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -67,7 +68,8 @@ public class ScreenSlideActivity extends AppCompatActivity {
         setContentView(R.layout.activity_screen_slide);
 
         Intent intent = this.getIntent();
-        String name = intent.getStringExtra("name");
+        name = intent.getStringExtra("name");
+        id = intent.getStringExtra("id");
         getSupportActionBar().setTitle(name);
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -108,14 +110,14 @@ public class ScreenSlideActivity extends AppCompatActivity {
     }
 
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter{
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return ScreenSlidePageFragment.create(position);
+            return ScreenSlidePageFragment.create(position, id);
         }
 
         @Override
@@ -124,11 +126,11 @@ public class ScreenSlideActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickNext(View v){
+    public void onClickNext(View v) {
         mPager.setCurrentItem(mPager.getCurrentItem() + 1);
     }
 
-    public void onClickPrev(View v){
+    public void onClickPrev(View v) {
         mPager.setCurrentItem(mPager.getCurrentItem() - 1);
     }
 }

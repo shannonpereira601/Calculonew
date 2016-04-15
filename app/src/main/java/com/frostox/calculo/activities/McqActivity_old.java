@@ -26,7 +26,7 @@ import calculo.frostox.com.calculo.R;
 import de.greenrobot.dao.query.Query;
 import io.github.kexanie.library.MathView;
 
-public class McqActivity extends AppCompatActivity {
+public class McqActivity_old extends AppCompatActivity {
 
     MathView webView;
     MathView optionA, optionB, optionC, optionD;
@@ -401,17 +401,17 @@ public class McqActivity extends AppCompatActivity {
 
         if(mcqItem != null) {
 
-            webView.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getQuestion() + "`</font>;", null);
-            optionA.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionA() + "`</font>;", null);
-            optionB.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionB() + "`</font>;", null);
-            optionC.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionC() + "`</font>;", null);
-            optionD.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionD() + "`</font>;", null);
+                webView.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getQuestion() + "`</font>;", null);
+                optionA.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionA() + "`</font>;", null);
+                optionB.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionB() + "`</font>;", null);
+                optionC.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionC() + "`</font>;", null);
+                optionD.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionD() + "`</font>;", null);
 
-            webView.setText(mcqItem.getQuestion());
-            optionA.setText(mcqItem.getOptionA());
-            optionB.setText(mcqItem.getOptionB());
-            optionC.setText(mcqItem.getOptionC());
-            optionD.setText(mcqItem.getOptionD());
+                webView.setText(mcqItem.getQuestion());
+                optionA.setText(mcqItem.getOptionA());
+                optionB.setText(mcqItem.getOptionB());
+                optionC.setText(mcqItem.getOptionC());
+                optionD.setText(mcqItem.getOptionD());
 
 
 

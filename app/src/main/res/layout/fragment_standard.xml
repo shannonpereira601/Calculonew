@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="invisible"
+
         android:layout_margin="6dp"
         >
 
@@ -28,8 +28,8 @@
             android:textSize="16sp" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/cornerspinner">
 
 
@@ -39,6 +39,33 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                ></Spinner>
+
+            <Button
+                android:layout_width="350dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="18dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:text="PROCEED"
+                android:id="@+id/button1"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/corner"
+                android:textColor="#fff"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="18dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="25dp"
+                android:elevation="4dp"
+                android:textColor="#fff"
+                android:textSize="18dp"
+
+                />
         </RelativeLayout>
 
     </LinearLayout>

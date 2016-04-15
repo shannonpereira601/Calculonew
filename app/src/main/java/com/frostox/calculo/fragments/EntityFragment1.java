@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -41,7 +44,7 @@ import calculo.frostox.com.calculo.R;
  * Use the {@link EntityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EntityFragment1 extends Fragment {
+public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "id";
@@ -137,7 +140,6 @@ public class EntityFragment1 extends Fragment {
             };
         } else if (current.equals("Subject")) {
 
-
             Firebase subjectref = ref.child("subjects");
             Query query = subjectref.orderByChild("course").equalTo(id);
             getKey(query);
@@ -180,12 +182,25 @@ public class EntityFragment1 extends Fragment {
 
                 }
             };
-        }else if (current.equals("MCQ")) {
+        } else if (current.equals("MCQ")) {
             Firebase mcqref = ref.child("mcqs");
             Query query = mcqref.orderByChild("topic").equalTo(id);
             getKey(query);
+            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+            spinner.setVisibility(View.VISIBLE);
 
-            recyclerAdapter = new FirebaseRecyclerAdapter<MCQs, DataObjectHolder>(MCQs.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+            List<String> categories = new ArrayList<String>();
+            categories.add("10");
+            categories.add("20");
+            categories.add("30");
+            categories.add("40");
+            categories.add("50");
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(dataAdapter);
+
+          /*  recyclerAdapter = new FirebaseRecyclerAdapter<MCQs, DataObjectHolder>(MCQs.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
                 @Override
                 public void populateViewHolder(DataObjectHolder dataObjectHolder, final MCQs mcqs, final int position) {
 
@@ -202,9 +217,9 @@ public class EntityFragment1 extends Fragment {
                     });
 
                 }
-            };
-        }else if (current.equals("Note")) {
-            Firebase noteref = ref.child("mcqs");
+            };*/
+        } else if (current.equals("Note")) {
+            Firebase noteref = ref.child("notes");
             Query query = noteref.orderByChild("topic").equalTo(id);
             getKey(query);
 
@@ -341,6 +356,7 @@ public class EntityFragment1 extends Fragment {
 
     }
 
+
     public void getKey(Query query) {
         query.addValueEventListener(new ValueEventListener() {
             int count = 0;
@@ -402,12 +418,22 @@ public class EntityFragment1 extends Fragment {
         recyclerAdapter.cleanup();
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

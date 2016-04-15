@@ -96,7 +96,7 @@ public class Home extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         standardFragment = new EntityFragment1();
@@ -277,6 +277,10 @@ public class Home extends AppCompatActivity
                 } else {
                     current = "Note";
                     noteFragment = new EntityFragment1();
+                    bundle = new Bundle();
+                    bundle.putString("current", current);
+                    bundle.putString("id", key);
+                    noteFragment.setArguments(bundle);
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_out2, R.anim.slide_in2)

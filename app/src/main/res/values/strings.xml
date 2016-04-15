@@ -97,5 +97,7 @@ v. Both anabolic and catabolic reactions require enzymes.]]></string>
 water.
 \n\n
 ii. Examples: Proteins, polysaccharides, nucleic acids, etc.]]></string>
+    <string name="spinner_title">Select number of mcqs</string>
+    <string name="numberofquestions">Please select number of questions:</string>
 
 </resources>

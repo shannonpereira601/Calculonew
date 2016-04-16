@@ -279,15 +279,15 @@ public class Home extends AppCompatActivity
             case "MCQ":
 
                 //Goto mcq activity
-                Intent intent = new Intent(this, McqActivity_old.class);
+               /*Intent intent = new Intent(this, McqActivity.class);
                 intent.putExtra("name", name);
                 // intent.putExtra("id", id);
 
-                startActivity(intent);
+                startActivity(intent);*/
                 break;
             case "Note":
                 //Goto note activity
-                intent = new Intent(this, ScreenSlideActivity.class);
+                Intent intent = new Intent(this, NotesActivity.class);
                 intent.putExtra("name", name);
                 intent.putExtra("id", key);
                 startActivity(intent);

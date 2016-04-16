@@ -1,6 +1,7 @@
 package com.frostox.calculo.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -22,14 +25,13 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
-import com.frostox.calculo.Entities.Standard;
-import com.frostox.calculo.Entities.Subject;
-import com.frostox.calculo.Nodes.MCQs;
 import com.frostox.calculo.Nodes.Notes;
 import com.frostox.calculo.Nodes.Standards;
 import com.frostox.calculo.Nodes.Subjects;
 import com.frostox.calculo.Nodes.Topics;
 import com.frostox.calculo.activities.Home;
+import com.frostox.calculo.activities.McqActivity;
+import com.frostox.calculo.activities.McqActivityold;
 import com.frostox.calculo.adapters.Data;
 
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
     private String[] courses = {"10th", "CET Foundation", "11th Science", "12th Sci"};
     private String[] key;
-    private String name;
+    private String name, noq, difficulty;
     boolean rvexists;
 
     private OnFragmentInteractionListener mListener;
@@ -182,43 +184,48 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 }
             };
         } else if (current.equals("MCQ")) {
-           rvexists = false;
-            Firebase mcqref = ref.child("mcqs");
-            Query query = mcqref.orderByChild("topic").equalTo(id);
-            getKey(query);
-            LinearLayout ll = (LinearLayout)view.findViewById(R.id.ll);
+            rvexists = false;
+            LinearLayout ll = (LinearLayout) view.findViewById(R.id.ll);
             ll.setVisibility(View.VISIBLE);
-            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+            Button Proceed = (Button) view.findViewById(R.id.PROCEED);
+            Spinner spinnernoq = (Spinner) view.findViewById(R.id.spinnernoq);
+            Spinner spinnerdifficulty = (Spinner) view.findViewById(R.id.spinnerdifficulty);
 
-            List<String> categories = new ArrayList<String>();
-            categories.add("10");
-            categories.add("20");
-            categories.add("30");
-            categories.add("40");
-            categories.add("50");
+            List<String> noq = new ArrayList<String>();
+            noq.add("10");
+            noq.add("20");
+            noq.add("30");
+            noq.add("40");
+            noq.add("50");
 
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(dataAdapter);
+            final List<String> difficultyal = new ArrayList<String>();
+            difficultyal.add("1");
+            difficultyal.add("2");
+            difficultyal.add("3");
+            difficultyal.add("4");
 
-          /*  recyclerAdapter = new FirebaseRecyclerAdapter<MCQs, DataObjectHolder>(MCQs.class, R.layout.recycler_view_item, DataObjectHolder.class, query) {
+            ArrayAdapter<String> noqAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, noq);
+            noqAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnernoq.setAdapter(noqAdapter);
+
+            ArrayAdapter<String> difficltyAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, difficultyal);
+            difficltyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerdifficulty.setAdapter(difficltyAdapter);
+
+            spinnernoq.setOnItemSelectedListener(this);
+            spinnerdifficulty.setOnItemSelectedListener(this);
+
+            Toast.makeText(getContext(), "Please select No. of Questions and Difficulty", Toast.LENGTH_LONG).show();
+
+            Proceed.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void populateViewHolder(DataObjectHolder dataObjectHolder, final MCQs mcqs, final int position) {
-
-
-                    //   if(subject.getCourse().equals(id)) {
-                    dataObjectHolder.label.setText(mcqs.getQuestion());
-                    //  }
-                    dataObjectHolder.label.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            name = mcqs.getQuestion();
-                            myClickListener.onItemClick(position, v);
-                        }
-                    });
-
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), McqActivity.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("difficulty", difficulty);
+                    startActivity(intent);
                 }
-            };*/
+            });
 
         } else if (current.equals("Note")) {
             Firebase noteref = ref.child("notes");
@@ -243,8 +250,9 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 }
             };
         }
-
-        recyclerView.setAdapter(recyclerAdapter);
+        if (rvexists) {
+            recyclerView.setAdapter(recyclerAdapter);
+        }
 
 /*
         if (id != null) {
@@ -391,7 +399,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         setOnItemClickListener(new MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                if(key[position]!=null) {
+                if (key[position] != null) {
                     homeActivity.navNext(key[position], name);
                 }
             }
@@ -418,15 +426,21 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(rvexists) {
+        if (rvexists) {
             recyclerAdapter.cleanup();
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+        Spinner spinner = (Spinner) parent;
+        if (spinner.getId() == R.id.spinnernoq) {
+            noq = parent.getItemAtPosition(position).toString();
+        } else if (spinner.getId() == R.id.spinnerdifficulty) {
+            difficulty = parent.getItemAtPosition(position).toString();
+        }
     }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

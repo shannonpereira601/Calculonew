@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.frostox.calculo.activities.McqActivity_old">
+    tools:context="com.frostox.calculo.activities.McqActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#fff"
+        app:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_right"
         android:onClick="onClickNext"
         />
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#fff"
+        app:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_left"
         android:onClick="onClickPrev"/>
 

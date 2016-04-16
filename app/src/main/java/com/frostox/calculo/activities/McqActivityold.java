@@ -26,7 +26,7 @@ import calculo.frostox.com.calculo.R;
 import de.greenrobot.dao.query.Query;
 import io.github.kexanie.library.MathView;
 
-public class McqActivity_old extends AppCompatActivity {
+public class McqActivityold extends AppCompatActivity {
 
     MathView webView;
     MathView optionA, optionB, optionC, optionD;
@@ -107,6 +107,7 @@ public class McqActivity_old extends AppCompatActivity {
     }
 
     public void initViews(){
+        /*
         webView = (MathView) findViewById(R.id.webView);
         optionA = (MathView) findViewById(R.id.optionA);
         optionB = (MathView) findViewById(R.id.optionB);
@@ -114,7 +115,7 @@ public class McqActivity_old extends AppCompatActivity {
         optionD = (MathView) findViewById(R.id.optionD);
         textView = (TextView) findViewById(R.id.question);
 
-
+*/
         /*webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setSupportZoom(false);
@@ -401,27 +402,22 @@ public class McqActivity_old extends AppCompatActivity {
 
         if(mcqItem != null) {
 
-                webView.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getQuestion() + "`</font>;", null);
-                optionA.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionA() + "`</font>;", null);
-                optionB.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionB() + "`</font>;", null);
-                optionC.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionC() + "`</font>;", null);
-                optionD.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionD() + "`</font>;", null);
+            webView.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getQuestion() + "`</font>;", null);
+            optionA.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionA() + "`</font>;", null);
+            optionB.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionB() + "`</font>;", null);
+            optionC.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionC() + "`</font>;", null);
+            optionD.loadUrl("javascript:document.getElementById('math').innerHTML=<font color=\"#000000\">`" + mcqItem.getOptionD() + "`</font>;", null);
 
-                webView.setText(mcqItem.getQuestion());
-                optionA.setText(mcqItem.getOptionA());
-                optionB.setText(mcqItem.getOptionB());
-                optionC.setText(mcqItem.getOptionC());
-                optionD.setText(mcqItem.getOptionD());
+            webView.setText(mcqItem.getQuestion());
+            optionA.setText(mcqItem.getOptionA());
+            optionB.setText(mcqItem.getOptionB());
+            optionC.setText(mcqItem.getOptionC());
+            optionD.setText(mcqItem.getOptionD());
 
 
 
         }
     }
-
-
-
-
-
 
     public void vibrateDevice(){
         Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);

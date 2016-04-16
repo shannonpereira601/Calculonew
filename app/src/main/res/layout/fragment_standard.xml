@@ -14,52 +14,100 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
         android:layout_margin="6dp"
-        >
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
+
             android:text="@string/numberofquestions"
             android:textColor="@color/button"
             android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cornerspinner">
-
+            android:layout_height="wrap_content">
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/spinnernoq"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_margin="5dp"
-               ></Spinner>
+                android:background="@drawable/cornerspinner">
+
+            </Spinner>
+
+            <ImageView
+                android:layout_width="13dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrows"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/difficultyofquestions"
+            android:textColor="@color/button"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/spinnerdifficulty"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/cornerspinner">
+
+            </Spinner>
+
+            <ImageView
+                android:layout_width="13dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrows"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
 
             <Button
+                android:id="@+id/PROCEED"
                 android:layout_width="350dp"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="18dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
-                android:text="PROCEED"
-                android:id="@+id/button1"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="18dp"
                 android:layout_marginTop="25dp"
                 android:background="@drawable/corner"
+                android:text="@string/proceed"
                 android:textColor="#fff"
-                android:textSize="17sp"
-                />
+                android:textSize="17sp" />
 
             <TextView
                 android:layout_width="350dp"
                 android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="18dp"
-                android:layout_alignParentBottom="true"
                 android:layout_marginTop="25dp"
                 android:elevation="4dp"
                 android:textColor="#fff"
@@ -73,7 +121,8 @@
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"></WebView>
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:visibility="invisible"></WebView>
 
 </FrameLayout>

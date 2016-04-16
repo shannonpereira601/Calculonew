@@ -27,30 +27,14 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@android:id/text1"
-            style="?android:textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/text2"
-            style="?android:textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.2"
-            android:text="@string/metabolismans" />
 
         <WebView
             android:id="@+id/web"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="400dp">
-        </WebView>
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"></WebView>
 
     </LinearLayout>
-
 
 </ScrollView>

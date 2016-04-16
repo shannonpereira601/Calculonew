@@ -66,60 +66,15 @@ public class ScreenSlidePageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
 
-        WebView webView = (WebView)rootView.findViewById(R.id.web);
+        WebView webView = (WebView) rootView.findViewById(R.id.web);
 
-        webView.loadUrl("https://www.frostox.com/extraclass/uploads/"+noteid);
-        Log.d("onn1CreateViewfrag", "https://www.frostox.com/extraclass/uploads/"+noteid);
-
-        switch (getPageNumber()){
-            case 0:
-                ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                        getString(R.string.title_template_step, mPageNumber + 1) + getString(R.string.macromol));
-
-                ((TextView) rootView.findViewById(R.id.text2)).setText(
-                        getString(R.string.macromolans));
-
-
-                break;
-
-            case 1:
-                ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                        getString(R.string.title_template_step, mPageNumber + 1) + getString(R.string.metabolism));
-
-                ((TextView) rootView.findViewById(R.id.text2)).setText(
-                        getString(R.string.metabolismans));
-                break;
-
-            case 2:
-                ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                        getString(R.string.title_template_step, mPageNumber + 1) + getString(R.string.short_note_cellular_pool));
-
-                ((TextView) rootView.findViewById(R.id.text2)).setText(
-                        getString(R.string.short_note_cellular_poolans));
-                break;
-            case 3:
-                ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                        getString(R.string.title_template_step, mPageNumber + 1) + getString(R.string.cellular_pool));
-
-                ((TextView) rootView.findViewById(R.id.text2)).setText(
-                        getString(R.string.cellular_poolans));
-                break;
-
-            case 4:
-                ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                        getString(R.string.title_template_step, mPageNumber + 1) + getString(R.string.cell));
-
-                ((TextView) rootView.findViewById(R.id.text2)).setText(
-                        getString(R.string.cellans));
-                break;
-        }
-
-
+        webView.loadUrl("https://www.frostox.com/extraclass/uploads/" + noteid);
+        Log.d("onn1CreateViewfrag", "https://www.frostox.com/extraclass/uploads/" + noteid);
         return rootView;
     }
 

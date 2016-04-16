@@ -99,5 +99,7 @@ water.
 ii. Examples: Proteins, polysaccharides, nucleic acids, etc.]]></string>
     <string name="spinner_title">Select number of mcqs</string>
     <string name="numberofquestions">Please select number of questions:</string>
+    <string name="proceed">PROCEED</string>
+    <string name="difficultyofquestions">Please select difficulty of questions</string>
 
 </resources>

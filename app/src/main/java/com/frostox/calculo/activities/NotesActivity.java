@@ -13,7 +13,7 @@ public class NotesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-        WebView webView = (WebView)findViewById(R.id.web);
+        WebView webView = (WebView)findViewById(R.id.webview);
         webView.loadUrl("http://square.github.io/picasso/");
     }
 }

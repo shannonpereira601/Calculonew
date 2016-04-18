@@ -8,6 +8,7 @@ import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,17 +48,22 @@ public class McqActivity extends AppCompatActivity {
 
     TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, score;
     ImageView imga, imgb, imgc, imgd, imgquestion;
-    String id, namebar, difficulty;
+    String id, namebar, difficulty, noq;
+    CardView cardview;
 
     String[] ans, ansA, ansB, ansC, ansD, explanation, explanationType, name, question, topic, type, key;
-    String[] rvqno, rvurl, rvqn, rvans, rvexp;
-    String[] answercheck;
+    String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
+    String[] rvqno2, rvexpurl2, rvurl2, rvansurl2, rvqn2, rvans2, rvexp2;
+    int[] ct;
     LinearLayout.LayoutParams fill, empty;
-
-    LinearLayout lltext, llimg;
+    RelativeLayout choosea, chooseb, choosec, choosed, prntrl;
 
     int count, scorecount;
     int page;
+
+    boolean[] checkanswer;
+
+    boolean noqmode = false;
 
     RecyclerView rv;
     Resultadapter ra;
@@ -87,17 +93,27 @@ public class McqActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mcq);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fill = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        empty = new LinearLayout.LayoutParams(0, 0);
+
+        click = (TextView) findViewById(R.id.answer);
+        questionnumber = (TextView) findViewById(R.id.questionnumber);
+        imgquestion = (ImageView) findViewById(R.id.imgquestion);
+        click.setVisibility(View.INVISIBLE);
+        questionnumber.setVisibility(View.INVISIBLE);
+        prntrl = (RelativeLayout) findViewById(R.id.prntrl);
+        prntrl.setVisibility(View.INVISIBLE);
+
         rv = (RecyclerView) findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setLayoutManager(llm);
 
         ref = new Firebase("https://extraclass.firebaseio.com/mcqs/");
+
         Intent intent = this.getIntent();
         id = intent.getStringExtra("id");
         difficulty = intent.getStringExtra("difficulty");
+        noq = intent.getStringExtra("noq");
+
         namebar = "Default";
         Query query = ref.orderByChild("topic").equalTo(id);
         query.addValueEventListener(new ValueEventListener() {
@@ -118,27 +134,24 @@ public class McqActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     key[count] = postSnapshot.getKey();
                     MCQs mcqtext = postSnapshot.getValue(MCQs.class);
-                    //  if (difficulty.equals(Integer.toString(mcqtext.getDifficulty()))) {
-                    ans[count] = mcqtext.getAns();
-                    ansA[count] = mcqtext.getAnsA();
-                    ansB[count] = mcqtext.getAnsB();
-                    ansC[count] = mcqtext.getAnsC();
-                    ansD[count] = mcqtext.getAnsD();
-                    type[count] = mcqtext.getType();
-                    name[count] = mcqtext.getName();
-                    question[count] = mcqtext.getQuestion();
-                    explanation[count] = mcqtext.getExplanation();
-                    count++;
-                    //  }
+                    if (difficulty.equals(Integer.toString(mcqtext.getDifficulty()))) {
+                        ans[count] = mcqtext.getAns();
+                        ansA[count] = mcqtext.getAnsA();
+                        ansB[count] = mcqtext.getAnsB();
+                        ansC[count] = mcqtext.getAnsC();
+                        ansD[count] = mcqtext.getAnsD();
+                        type[count] = mcqtext.getType();
+                        name[count] = mcqtext.getName();
+                        question[count] = mcqtext.getQuestion();
+                        explanation[count] = mcqtext.getExplanation();
+                        count++;
+                    }
                 }
                 if (count != 0) {
                     initViews();
                 } else {
-                    lltext.setVisibility(View.INVISIBLE);
-                    llimg.setVisibility(View.INVISIBLE);
-                    questionnumber.setVisibility(View.INVISIBLE);
-                    qn.setVisibility(View.INVISIBLE);
-                    imgquestion.setVisibility(View.INVISIBLE);
+                    click.setVisibility(View.VISIBLE);
+                    click.setText("No MCQs over here");
                     Toast.makeText(McqActivity.this, "Sorry there are no MCQs", Toast.LENGTH_LONG).show();
                 }
             }
@@ -153,18 +166,22 @@ public class McqActivity extends AppCompatActivity {
     }
 
     public void initViews() {
-
+        prntrl.setVisibility(View.VISIBLE);
+        ct = new int[count];
         rvqn = new String[count];
         rvqno = new String[count];
         rvurl = new String[count];
+        rvansurl = new String[count];
+        rvexpurl = new String[count];
         rvans = new String[count];
         rvexp = new String[count];
 
-        lltext = (LinearLayout) findViewById(R.id.optiontext);
-        llimg = (LinearLayout) findViewById(R.id.optionimg);
+        cardview = (CardView) findViewById(R.id.card_view);
+        choosea = (RelativeLayout) findViewById(R.id.choosea);
+        chooseb = (RelativeLayout) findViewById(R.id.chooseb);
+        choosec = (RelativeLayout) findViewById(R.id.choosec);
+        choosed = (RelativeLayout) findViewById(R.id.choosed);
 
-        answercheck = new String[count];
-        answercheck[0] = "incorrect";
         qn = (TextView) findViewById(R.id.question);
         optionA = (TextView) findViewById(R.id.ansa);
         optionB = (TextView) findViewById(R.id.ansb);
@@ -179,22 +196,19 @@ public class McqActivity extends AppCompatActivity {
         imgc = (ImageView) findViewById(R.id.imgc);
         imgd = (ImageView) findViewById(R.id.imgd);
         imgquestion = (ImageView) findViewById(R.id.imgquestion);
-        lltext.setVisibility(View.INVISIBLE);
-        llimg.setVisibility(View.INVISIBLE);
-        questionnumber.setVisibility(View.INVISIBLE);
+        click.setVisibility(View.VISIBLE);
+        questionnumber.setVisibility(View.VISIBLE);
         qn.setVisibility(View.INVISIBLE);
         imgquestion.setVisibility(View.INVISIBLE);
-        TouchListener(imga, "A");
-        TouchListener(imgb, "B");
-        TouchListener(imgc, "C");
-        TouchListener(imgd, "D");
-        TouchListener(optionA, "A");
-        TouchListener(optionB, "B");
-        TouchListener(optionC, "C");
-        TouchListener(optionD, "D");
+        textinvisible();
+        imginvisible();
+        TouchListener(choosea, "A");
+        TouchListener(chooseb, "B");
+        TouchListener(choosec, "C");
+        TouchListener(choosed, "D");
         page = 0;
+        checkanswer = new boolean[count];
         load(0);
-
     }
 
 
@@ -204,8 +218,6 @@ public class McqActivity extends AppCompatActivity {
             load(page);
         } else {
             Toast.makeText(McqActivity.this, "No MCQs Behind", Toast.LENGTH_LONG).show();
-            lltext.setVisibility(View.INVISIBLE);
-            llimg.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -221,56 +233,69 @@ public class McqActivity extends AppCompatActivity {
         if (v != null)
             Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
 
-        if (page != count && count != 0) {
-            load(page);
-
-        } else if (page >= count) {
-            Toast.makeText(McqActivity.this, "No More MCQs", Toast.LENGTH_LONG).show();
+        if (page == (Integer.parseInt(noq))) {
+            noqmode = true;
+            Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
             getSupportActionBar().setTitle("Result");
-            lltext.setVisibility(View.INVISIBLE);
-            llimg.setVisibility(View.INVISIBLE);
+            textinvisible();
+            imginvisible();
+            prntrl.setVisibility(View.INVISIBLE);
             score.setVisibility(View.VISIBLE);
+            cardview.setVisibility(View.VISIBLE);
             score.setText("Your score is: " + scorecount);
-            questionnumber.setVisibility(View.INVISIBLE);
-            imgquestion.setVisibility(View.INVISIBLE);
-            qn.setVisibility(View.INVISIBLE);
-            click.setVisibility(View.INVISIBLE);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
             rv.setAdapter(ra);
         }
+
+        if (page != count && count != 0) {
+            load(page);
+        } else if (page >= count) {
+            Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
+            getSupportActionBar().setTitle("Result");
+            textinvisible();
+            imginvisible();
+            prntrl.setVisibility(View.INVISIBLE);
+            score.setVisibility(View.VISIBLE);
+            cardview.setVisibility(View.VISIBLE);
+            score.setText("Your score is: " + scorecount);
+            rv.setVisibility(View.VISIBLE);
+            ra = new Resultadapter(this, getdata());
+            rv.setAdapter(ra);
+        }
+
     }
 
     public void load(int i) {
-        questionnumber.setVisibility(View.VISIBLE);
 
         if (type[i].equals("text")) {
-            llimg.setVisibility(View.INVISIBLE);
-            lltext.setVisibility(View.VISIBLE);
-            //llimg.setLayoutParams(empty);
-            //lltext.setLayoutParams(fill);
-            qn.setVisibility(View.VISIBLE);
-            imgquestion.setVisibility(View.INVISIBLE);
+            textvisible();
+            imginvisible();
             qn.setText(question[i]);
-            optionA.setText(ansA[i]);
-            optionB.setText(ansB[i]);
-            optionC.setText(ansC[i]);
-            optionD.setText(ansD[i]);
+            optionA.setText("(a) " + ansA[i]);
+            optionB.setText("(b) " + ansB[i]);
+            optionC.setText("(c) " + ansC[i]);
+            optionD.setText("(d) " + ansD[i]);
             questionnumber.setText("Q." + (i + 1));
             rvqno[i] = ("Q." + (i + 1));
             rvqn[i] = question[i];
             rvurl[i] = "http://www.frostox.com/extraclass/uploads/";
-            //if(answercheck[i].equals("correct"))  rvans[i] = ("Answer: " + ans[i]+ " (Correct)");
-            rvans[i] = ("Answer: " + ans[i] + " (Wrong)");
+            rvexpurl[i] = "http://www.frostox.com/extraclass/uploads/";
+            if (ans[i].equals("A")) {
+                rvans[i] = ansA[i];
+            } else if (ans[i].equals("B")) {
+                rvans[i] = ansB[i];
+            } else if (ans[i].equals("C")) {
+                rvans[i] = ansC[i];
+            } else if (ans[i].equals("D")) {
+                rvans[i] = ansD[i];
+            }
+            rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/");
             rvexp[i] = explanation[i];
 
         } else if (type[i].equals("image")) {
-            qn.setVisibility(View.INVISIBLE);
-            imgquestion.setVisibility(View.VISIBLE);
-            lltext.setVisibility(View.INVISIBLE);
-            llimg.setVisibility(View.VISIBLE);
-            //  lltext.setLayoutParams(empty);
-            //llimg.setLayoutParams(fill);
+            textinvisible();
+            imgvisible();
             Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "quest").into(imgquestion);
             Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "A").into(imga);
             Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "B").into(imgb);
@@ -280,9 +305,18 @@ public class McqActivity extends AppCompatActivity {
             rvqno[i] = ("Q." + (i + 1));
             rvqn[i] = "";
             rvurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "quest");
-            //if(answercheck[i].equals("incorrect"))  rvans[i] = ("Answer: " + ans[i]+ " (Correct)");
-            rvans[i] = ("Answer: " + ans[i] + " (Wrong)");
-            rvexp[i] = explanation[i];
+            rvexpurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "explanation");
+            if (ans[i].equals("A")) {
+                rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "A");
+            } else if (ans[i].equals("B")) {
+                rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "B");
+            } else if (ans[i].equals("C")) {
+                rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "C");
+            } else if (ans[i].equals("D")) {
+                rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "D");
+            }
+            rvans[i] = "";
+            rvexp[i] = "";
         }
         getSupportActionBar().setTitle(name[i]);
     }
@@ -299,7 +333,7 @@ public class McqActivity extends AppCompatActivity {
 
     public void TouchListener(View v, final String option) {
 
-        String check = String.valueOf(v.getId());
+        final String check = String.valueOf(v.getId());
 
 
         v.setOnTouchListener(new View.OnTouchListener() {
@@ -325,12 +359,13 @@ public class McqActivity extends AppCompatActivity {
                             String get = String.valueOf(view.getId());
                             Log.d("nuontouch", get);
                             if (ans[page].equals(option)) {
-                                answercheck[page] = "correct";
-                                onClickNext(null);
+                                ct[page] = R.drawable.mark;
+                                checkanswer[page] = true;
                                 scorecount++;
-
+                                onClickNext(null);
                             } else {
-                                answercheck[page] = "incorrect";
+                                ct[page] = R.drawable.cross;
+                                checkanswer[page] = false;
                                 onClickNext((View) findViewById(R.id.dummy));
                                 vibrateDevice();
                             }
@@ -363,26 +398,17 @@ public class McqActivity extends AppCompatActivity {
 
     }
 
-    public void DisableTouchListener(View v, final String option) {
-
-        v.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return false;
-            }
-        });
-    }
-
     public List<ResultData> getdata() {
         List<ResultData> input = new ArrayList<>();
-        String[] Qno = {"Q.1", "Q.2"};
-        String[] Imgurl = {"http://i.imgur.com/DvpvklR.png", "http://i.imgur.com/DvpvklR.png"};
-        String[] Question = {"sample", "sample2"};
-        String[] Answer = {"sample", "sample2"};
-        String[] Explanation = {"sample", "sample2"};
-        for (int i = 0; i < count; i++) {
-            ResultData current = new ResultData(rvurl[i], rvqno[i], rvqn[i], rvans[i], rvexp[i]);
+        int length;
+        if (noqmode) length = (Integer.parseInt(noq));
+        else length = count;
+        for (int i = 0; i < length; i++) {
+            ResultData current = new ResultData(rvurl[i], rvansurl[i], rvexpurl[i], rvqno[i], rvqn[i], rvans[i], rvexp[i], ct[i]);
+            current.ct = ct[i];
+            current.imgansurl = rvansurl[i];
             current.imgqnurl = rvurl[i];
+            current.expurl = rvexpurl[i];
             current.qno = (rvqno[i]);
             current.qn = rvqn[i];
             current.ans = rvans[i];
@@ -392,49 +418,37 @@ public class McqActivity extends AppCompatActivity {
         return input;
     }
 
-    public void setontouch(View v, final String ans) {
+    public void textvisible() {
+        qn.setVisibility(View.VISIBLE);
+        optionA.setVisibility(View.VISIBLE);
+        optionB.setVisibility(View.VISIBLE);
+        optionC.setVisibility(View.VISIBLE);
+        optionD.setVisibility(View.VISIBLE);
+    }
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TouchListener(v, ans);
-            }
-        });
+    public void textinvisible() {
+        qn.setVisibility(View.INVISIBLE);
+        optionA.setVisibility(View.INVISIBLE);
+        optionB.setVisibility(View.INVISIBLE);
+        optionC.setVisibility(View.INVISIBLE);
+        optionD.setVisibility(View.INVISIBLE);
+    }
+
+    public void imgvisible() {
+        imgquestion.setVisibility(View.VISIBLE);
+        imga.setVisibility(View.VISIBLE);
+        imgb.setVisibility(View.VISIBLE);
+        imgc.setVisibility(View.VISIBLE);
+        imgd.setVisibility(View.VISIBLE);
+    }
+
+    public void imginvisible() {
+        imgquestion.setVisibility(View.INVISIBLE);
+        imga.setVisibility(View.INVISIBLE);
+        imgb.setVisibility(View.INVISIBLE);
+        imgc.setVisibility(View.INVISIBLE);
+        imgd.setVisibility(View.INVISIBLE);
+
     }
 }
 
-
-       /* if (i != 0) {
-            if (type[i].equals("text") && type[i - 1].equals("image")) {
-
-                setontouch(optionA, "A");
-                setontouch(optionB, "B");
-                setontouch(optionC, "C");
-                setontouch(optionD, "D");
-            } else if (type[i].equals("image") && type[i - 1].equals("text")) {
-
-                setontouch(imga, "A");
-                setontouch(imgb, "B");
-                setontouch(imgc, "C");
-                setontouch(imgd, "D");
-            } else if (type[i].equals("image") && type[i - 1].equals("image")) {
-                TouchListener(imga, "A");
-                TouchListener(imgb, "B");
-                TouchListener(imgc, "C");
-                TouchListener(imgd, "D");
-                DisableTouchListener(optionA, "A");
-                DisableTouchListener(optionB, "B");
-                DisableTouchListener(optionC, "C");
-                DisableTouchListener(optionD, "D");
-            } else if (type[i].equals("text") && type[i - 1].equals("text")) {
-                TouchListener(optionA, "A");
-                TouchListener(optionB, "B");
-                TouchListener(optionC, "C");
-                TouchListener(optionD, "D");
-                DisableTouchListener(imga, "A");
-                DisableTouchListener(imgb, "B");
-                DisableTouchListener(imgc, "C");
-                DisableTouchListener(imgd, "D");
-
-            }
-        }*/

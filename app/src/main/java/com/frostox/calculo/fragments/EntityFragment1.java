@@ -68,7 +68,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
     private String[] courses = {"10th", "CET Foundation", "11th Science", "12th Sci"};
     private String[] key;
-    private String name, noq, difficulty;
+    private String name, numberofq, difficulty;
     boolean rvexists;
 
     private OnFragmentInteractionListener mListener;
@@ -191,7 +191,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             Spinner spinnernoq = (Spinner) view.findViewById(R.id.spinnernoq);
             Spinner spinnerdifficulty = (Spinner) view.findViewById(R.id.spinnerdifficulty);
 
-            List<String> noq = new ArrayList<String>();
+            final List<String> noq = new ArrayList<String>();
             noq.add("10");
             noq.add("20");
             noq.add("30");
@@ -223,6 +223,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                     Intent intent = new Intent(getContext(), McqActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("difficulty", difficulty);
+                    intent.putExtra("noq", numberofq);
                     startActivity(intent);
                 }
             });
@@ -253,113 +254,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         if (rvexists) {
             recyclerView.setAdapter(recyclerAdapter);
         }
-
-/*
-        if (id != null) {
-            Log.d("onnKEY2", id);
-            Firebase qref = ref.child("subjects");
-            Query query = qref.orderByChild("course").equalTo(id);
-
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int length = (int) dataSnapshot.getChildrenCount();
-                    subjects = new String[length];
-                    key = new String[length];
-
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-                        Subjects subject = postSnapshot.getValue(Subjects.class);
-                        //    if (subject.getCourse().equals(id)) {
-                        System.out.println("onnksubject " + subject.getName() + " " + subject.getCourse());
-                        // }
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        if (current.equals("Standard")) {
-            Firebase cref = ref.child("courses");
-
-            cref.addValueEventListener(new ValueEventListener() {
-                int count = 0;
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int lenghth = (int) dataSnapshot.getChildrenCount();
-                    courses = new String[lenghth];
-                    key = new String[lenghth];
-
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-                        key[count] = postSnapshot.getKey();
-                        Courses course = postSnapshot.getValue(Courses.class);
-                        courses[count] = course.getName();
-                        //  System.out.println("onncourses " + " " + course.getName() + " " + key[count]);
-                        count++;
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
-        } else if (current.equals("Subject")) {
-            Firebase sref = ref.child("subjects");
-            sref.addValueEventListener(new ValueEventListener() {
-
-                int count = 0;
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    int length = (int) dataSnapshot.getChildrenCount();
-                    subjects = new String[length];
-                    key = new String[length];
-
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-                        Subjects subject = postSnapshot.getValue(Subjects.class);
-                        key[count] = postSnapshot.getKey();
-
-
-                        //    if (subject.getCourse().equals(id)) {
-                        //System.out.println("onnsubject " + subject.getName() + " " + subject.getCourse());
-                        // }
-                        count++;
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
-        }
-        recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(homeActivity);
-        recyclerView.setLayoutManager(layoutManager);
-
-        data = getdata();
-
-        recyclerViewAdapter = new RecyclerViewAdapter(data);
-
-        recyclerView.setAdapter(recyclerViewAdapter);
-
-        RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecoration(this.getActivity(), LinearLayoutManager.VERTICAL);
-
-        recyclerView.addItemDecoration(itemDecoration);
-        Log.d("onnTest", "1.5");*/
-
 
         return view;
 
@@ -435,7 +329,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Spinner spinner = (Spinner) parent;
         if (spinner.getId() == R.id.spinnernoq) {
-            noq = parent.getItemAtPosition(position).toString();
+            numberofq = parent.getItemAtPosition(position).toString();
         } else if (spinner.getId() == R.id.spinnerdifficulty) {
             difficulty = parent.getItemAtPosition(position).toString();
         }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +52,7 @@ public class McqActivity extends AppCompatActivity {
     ImageView imga, imgb, imgc, imgd, imgquestion;
     String id, namebar, difficulty, noq;
     CardView cardview;
+    Button Skip;
 
     String[] ans, ansA, ansB, ansC, ansD, explanation, explanationType, name, question, topic, type, key;
     String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
@@ -166,6 +169,7 @@ public class McqActivity extends AppCompatActivity {
     }
 
     public void initViews() {
+
         prntrl.setVisibility(View.VISIBLE);
         ct = new int[count];
         rvqn = new String[count];
@@ -176,6 +180,7 @@ public class McqActivity extends AppCompatActivity {
         rvans = new String[count];
         rvexp = new String[count];
 
+        Skip = (Button) findViewById(R.id.skip);
         cardview = (CardView) findViewById(R.id.card_view);
         choosea = (RelativeLayout) findViewById(R.id.choosea);
         chooseb = (RelativeLayout) findViewById(R.id.chooseb);
@@ -224,6 +229,14 @@ public class McqActivity extends AppCompatActivity {
 
     public void onClickNext(View v) {
         ++page;
+
+        if (v.getId() == R.id.skip) {
+            Toast.makeText(getBaseContext(),"Clicked here",Toast.LENGTH_LONG).show();
+     /*       ct[page] = R.drawable.skip;
+            load(page);
+            ++page;
+            load(page);*/
+        }
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
 
@@ -330,20 +343,15 @@ public class McqActivity extends AppCompatActivity {
         Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
     }
 
-
     public void TouchListener(View v, final String option) {
 
         final String check = String.valueOf(v.getId());
-
-
         v.setOnTouchListener(new View.OnTouchListener() {
             public final static int FINGER_RELEASED = 0;
             public final static int FINGER_TOUCHED = 1;
             public final static int FINGER_DRAGGING = 2;
             public final static int FINGER_UNDEFINED = 3;
-
             private int fingerState = FINGER_RELEASED;
-
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

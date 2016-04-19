@@ -223,7 +223,6 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
         </LinearLayout>
@@ -240,6 +239,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
 
             />
+
 
         <View
             android:id="@+id/dummy"

@@ -202,7 +202,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             difficultyal.add("1");
             difficultyal.add("2");
             difficultyal.add("3");
-            difficultyal.add("4");
 
             ArrayAdapter<String> noqAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, noq);
             noqAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

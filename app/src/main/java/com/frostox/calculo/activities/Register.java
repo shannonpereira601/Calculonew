@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -90,7 +91,13 @@ public class Register extends AppCompatActivity {
                                     User user = new User(Email.getText().toString(),  authData.getUid(), Fname.getText().toString(), status);
                                     Firebase users = ref.child("users");
                                     users.child(authData.getUid());
-                                    users.push().setValue(user);
+                                   // String ref = users.push().setValue(user);
+                                    Firebase newref = users.push();
+                                    String key = newref.getKey();
+                                    newref.setValue(user);
+                                    Firebase mcqRef = ref.child("users/"+key).child("mcq");
+                                    MCQ mcq = new MCQ("Default","Default","Default");
+                                    mcqRef.setValue(mcq);
                                     Intent intent = new Intent(Register.this, Login.class);
                                     startActivity(intent);
                                     //changed this file
@@ -116,7 +123,7 @@ public class Register extends AppCompatActivity {
     }
 
 
-    public class User {
+       public class User {
         private String fullName;
         private String email;
         private String uid;
@@ -148,6 +155,35 @@ public class Register extends AppCompatActivity {
             return false;
         }
     }
+
+    public class MCQ {
+        public String getDate() {
+            return date;
+        }
+
+        public String getMcqid() {
+            return mcqid;
+        }
+
+        public String getAns() {
+            return ans;
+        }
+
+        private String date;
+        private String mcqid;
+        private String ans;
+
+        public MCQ() {
+        }
+
+        public MCQ(String date, String mcqid, String ans) {
+            this.date = date;
+            this.mcqid = mcqid;
+            this.ans = ans;
+        }
+
+    }
+
 
     public static boolean isEmailValid(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();

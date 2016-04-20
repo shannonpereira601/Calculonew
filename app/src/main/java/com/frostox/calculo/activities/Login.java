@@ -41,20 +41,6 @@ public class Login extends AppCompatActivity {
 
         Firebase.setAndroidContext(this);
         final Firebase ref = new Firebase("https://extraclass.firebaseio.com");
-
-   /*     ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.d("jsoncheck",""+snapshot.getValue());
-             // System.out.println(snapshot.getValue());
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });*/
-
-
         email = (EditText) findViewById(R.id.e1);
         pass = (EditText) findViewById(R.id.e2);
 

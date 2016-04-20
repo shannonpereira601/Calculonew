@@ -22,9 +22,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -32,6 +34,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.frostox.calculo.Entities.McqItem;
 import com.frostox.calculo.Nodes.MCQs;
+import com.frostox.calculo.Nodes.UserMcqs;
 import com.frostox.calculo.adapters.ResultData;
 import com.frostox.calculo.adapters.Resultadapter;
 import com.frostox.calculo.dao.DaoMaster;
@@ -58,19 +61,20 @@ public class McqActivity extends AppCompatActivity {
     String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
     String[] rvqno2, rvexpurl2, rvurl2, rvansurl2, rvqn2, rvans2, rvexp2;
     int[] ct;
-    LinearLayout.LayoutParams fill, empty;
+    ScrollView scrollres;
     RelativeLayout choosea, chooseb, choosec, choosed, prntrl;
 
     int count, scorecount;
     int page;
 
     boolean[] checkanswer;
+    int skipped, correct;
 
     boolean noqmode = false;
-
+    String userid, keyid;
     RecyclerView rv;
     Resultadapter ra;
-    Firebase ref;
+    Firebase ref, mcqref, userRef;
 
     private List<McqItem> mcqItems;
 
@@ -111,12 +115,18 @@ public class McqActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
 
         ref = new Firebase("https://extraclass.firebaseio.com/mcqs/");
+        Firebase mainref = new Firebase("https://extraclass.firebaseio.com");
+        userRef = new Firebase("https://extraclass.firebaseio.com/users/");
+        AuthData authData = mainref.getAuth();
+        userid = authData.getUid();
+        getUserKey();
+        System.out.println("nuon " + "User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+        Log.d("nuonAuth", "Logged in");
 
         Intent intent = this.getIntent();
         id = intent.getStringExtra("id");
         difficulty = intent.getStringExtra("difficulty");
         noq = intent.getStringExtra("noq");
-
         namebar = "Default";
         Query query = ref.orderByChild("topic").equalTo(id);
         query.addValueEventListener(new ValueEventListener() {
@@ -153,6 +163,7 @@ public class McqActivity extends AppCompatActivity {
                 if (count != 0) {
                     initViews();
                 } else {
+                    Skip.setVisibility(View.INVISIBLE);
                     click.setVisibility(View.VISIBLE);
                     click.setText("No MCQs over here");
                     Toast.makeText(McqActivity.this, "Sorry there are no MCQs", Toast.LENGTH_LONG).show();
@@ -187,6 +198,7 @@ public class McqActivity extends AppCompatActivity {
         choosec = (RelativeLayout) findViewById(R.id.choosec);
         choosed = (RelativeLayout) findViewById(R.id.choosed);
 
+        scrollres = (ScrollView) findViewById(R.id.scrollres);
         qn = (TextView) findViewById(R.id.question);
         optionA = (TextView) findViewById(R.id.ansa);
         optionB = (TextView) findViewById(R.id.ansb);
@@ -211,6 +223,7 @@ public class McqActivity extends AppCompatActivity {
         TouchListener(chooseb, "B");
         TouchListener(choosec, "C");
         TouchListener(choosed, "D");
+        TouchListener(Skip, "skip");
         page = 0;
         checkanswer = new boolean[count];
         load(0);
@@ -227,35 +240,29 @@ public class McqActivity extends AppCompatActivity {
 
     }
 
-    public void onClickNext(View v) {
+    public void onClickNext(View v, boolean skip) {
         ++page;
 
-        if (v.getId() == R.id.skip) {
-            Toast.makeText(getBaseContext(),"Clicked here",Toast.LENGTH_LONG).show();
-     /*       ct[page] = R.drawable.skip;
-            load(page);
-            ++page;
-            load(page);*/
-        }
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
 
-        if (v == null)
+       /* if (v == null && !skip)
             Snackbar.make(viewGroup, "Correct!", Snackbar.LENGTH_LONG).show();
-
-        if (v != null)
-            Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
+        else if(v!=null && !skip)Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
+        else Snackbar.make(viewGroup, "Skipped!", Snackbar.LENGTH_LONG).show();*/
 
         if (page == (Integer.parseInt(noq))) {
             noqmode = true;
             Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
             getSupportActionBar().setTitle("Result");
+            scrollres.setVisibility(View.VISIBLE);
             textinvisible();
             imginvisible();
             prntrl.setVisibility(View.INVISIBLE);
             score.setVisibility(View.VISIBLE);
             cardview.setVisibility(View.VISIBLE);
-            score.setText("Your score is: " + scorecount);
+            count = Integer.parseInt(noq);
+            score.setText("Total Questions: " + count + "\n" + "Attempted: " + (count - skipped) + "\n" + "Not Attempted: " + skipped + "\n" + "Right Answer: " + scorecount + "\n" + "Wrong Answer: " + (count - scorecount - skipped) + "\n" + "Total Score: " + scorecount);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
             rv.setAdapter(ra);
@@ -265,13 +272,18 @@ public class McqActivity extends AppCompatActivity {
             load(page);
         } else if (page >= count) {
             Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
+            Skip.setVisibility(View.INVISIBLE);
             getSupportActionBar().setTitle("Result");
             textinvisible();
             imginvisible();
             prntrl.setVisibility(View.INVISIBLE);
+            scrollres.setVisibility(View.VISIBLE);
             score.setVisibility(View.VISIBLE);
             cardview.setVisibility(View.VISIBLE);
-            score.setText("Your score is: " + scorecount);
+
+            if (!noqmode)
+                score.setText("Total Questions: " + count + "\n" + "Attempted: " + (count - skipped) + "\n" + "Not Attempted: " + skipped + "\n" + "Right Answer: " + scorecount + "\n" + "Wrong Answer: " + (count - scorecount - skipped) + "\n" + "Total Score: " + scorecount);
+
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
             rv.setAdapter(ra);
@@ -364,19 +376,31 @@ public class McqActivity extends AppCompatActivity {
                         else fingerState = FINGER_UNDEFINED;
 
                         if (ans != null) {
-                            String get = String.valueOf(view.getId());
-                            Log.d("nuontouch", get);
+
+                            UserMcqs mcqs;
+
+
                             if (ans[page].equals(option)) {
+                                mcqs = new UserMcqs(option+"(Correct)","date",key[page]);
                                 ct[page] = R.drawable.mark;
                                 checkanswer[page] = true;
                                 scorecount++;
-                                onClickNext(null);
+                                onClickNext(null, false);
+
+                            } else if (option.equals("skip")) {
+                                mcqs = new UserMcqs(option+"(Skipped)","date",key[page]);
+                                ct[page] = R.drawable.skip;
+                                skipped++;
+                                checkanswer[page] = false;
+                                onClickNext(null, true);
                             } else {
+                                mcqs = new UserMcqs(option+"(Wrong)","date",key[page]);
                                 ct[page] = R.drawable.cross;
                                 checkanswer[page] = false;
-                                onClickNext((View) findViewById(R.id.dummy));
-                                vibrateDevice();
+                                onClickNext((View) findViewById(R.id.dummy), false);
+                                // vibrateDevice();
                             }
+                            mcqref.setValue(mcqs);
                         }
 
                         break;
@@ -457,6 +481,31 @@ public class McqActivity extends AppCompatActivity {
         imgc.setVisibility(View.INVISIBLE);
         imgd.setVisibility(View.INVISIBLE);
 
+    }
+
+    public void getUserKey() {
+
+        Query query = userRef.orderByChild("uid").equalTo(userid);
+
+        query.addValueEventListener(new ValueEventListener() {
+            int count = 0;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int length = (int) dataSnapshot.getChildrenCount();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    keyid = postSnapshot.getKey();
+                    count++;
+                }
+                mcqref = new Firebase("https://extraclass.firebaseio.com/users/"+keyid+"/mcq");
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
     }
 }
 

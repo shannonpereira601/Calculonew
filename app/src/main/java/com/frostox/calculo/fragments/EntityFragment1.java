@@ -214,6 +214,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             spinnernoq.setOnItemSelectedListener(this);
             spinnerdifficulty.setOnItemSelectedListener(this);
 
+
             Toast.makeText(getContext(), "Please select No. of Questions and Difficulty", Toast.LENGTH_LONG).show();
 
             Proceed.setOnClickListener(new View.OnClickListener() {

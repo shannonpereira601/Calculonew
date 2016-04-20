@@ -18,6 +18,6 @@ public class NotesActivity extends AppCompatActivity {
         String name = intent.getStringExtra("name");
         String id = intent.getStringExtra("id");
         WebView webView = (WebView)findViewById(R.id.webview);
-        webView.loadUrl("http://square.github.io/picasso/");
+        webView.loadUrl("http://www.frostox.com/extraclass/uploads/"+id);
     }
 }

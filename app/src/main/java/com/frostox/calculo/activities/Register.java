@@ -155,35 +155,7 @@ public class Register extends AppCompatActivity {
             return false;
         }
     }
-
-    public class MCQ {
-        public String getDate() {
-            return date;
-        }
-
-        public String getMcqid() {
-            return mcqid;
-        }
-
-        public String getAns() {
-            return ans;
-        }
-
-        private String date;
-        private String mcqid;
-        private String ans;
-
-        public MCQ() {
-        }
-
-        public MCQ(String date, String mcqid, String ans) {
-            this.date = date;
-            this.mcqid = mcqid;
-            this.ans = ans;
-        }
-
-    }
-
+    
 
     public static boolean isEmailValid(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();

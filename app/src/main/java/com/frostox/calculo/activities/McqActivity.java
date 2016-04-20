@@ -381,20 +381,20 @@ public class McqActivity extends AppCompatActivity {
 
 
                             if (ans[page].equals(option)) {
-                                mcqs = new UserMcqs(option+"(Correct)","date",key[page]);
+                                mcqs = new UserMcqs(option,"date",key[page],"Correct");
                                 ct[page] = R.drawable.mark;
                                 checkanswer[page] = true;
                                 scorecount++;
                                 onClickNext(null, false);
 
                             } else if (option.equals("skip")) {
-                                mcqs = new UserMcqs(option+"(Skipped)","date",key[page]);
+                                mcqs = new UserMcqs(option,"date",key[page],"Wrong");
                                 ct[page] = R.drawable.skip;
                                 skipped++;
                                 checkanswer[page] = false;
                                 onClickNext(null, true);
                             } else {
-                                mcqs = new UserMcqs(option+"(Wrong)","date",key[page]);
+                                mcqs = new UserMcqs(option,"date",key[page],"Skipped");
                                 ct[page] = R.drawable.cross;
                                 checkanswer[page] = false;
                                 onClickNext((View) findViewById(R.id.dummy), false);

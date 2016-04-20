@@ -9,13 +9,20 @@ public class UserMcqs {
     private String date;
     private String mcqid;
 
+    public String getState() {
+        return state;
+    }
+
+    private String state;
+
     public UserMcqs() {
     }
 
-    public UserMcqs(String ans, String date, String mcqid) {
+    public UserMcqs(String ans, String date, String mcqid, String state) {
         this.ans = ans;
         this.date = date;
         this.mcqid = mcqid;
+        this.state = state;
     }
 
 

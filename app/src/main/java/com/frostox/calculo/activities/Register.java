@@ -95,9 +95,9 @@ public class Register extends AppCompatActivity {
                                     Firebase newref = users.push();
                                     String key = newref.getKey();
                                     newref.setValue(user);
-                                    Firebase mcqRef = ref.child("users/"+key).child("mcq");
-                                    MCQ mcq = new MCQ("Default","Default","Default");
-                                    mcqRef.setValue(mcq);
+                                   // Firebase mcqRef = ref.child("users/"+key).child("mcqs").child("mcq");
+                                    //MCQ mcq = new MCQ("Default","Default","Default");
+                                    //mcqRef.push().setValue(mcq);
                                     Intent intent = new Intent(Register.this, Login.class);
                                     startActivity(intent);
                                     //changed this file

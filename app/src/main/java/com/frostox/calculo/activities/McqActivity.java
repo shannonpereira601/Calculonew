@@ -400,7 +400,7 @@ public class McqActivity extends AppCompatActivity {
                                 onClickNext((View) findViewById(R.id.dummy), false);
                                 // vibrateDevice();
                             }
-                            mcqref.setValue(mcqs);
+                            mcqref.push().setValue(mcqs);
                         }
 
                         break;
@@ -498,7 +498,7 @@ public class McqActivity extends AppCompatActivity {
                     keyid = postSnapshot.getKey();
                     count++;
                 }
-                mcqref = new Firebase("https://extraclass.firebaseio.com/users/"+keyid+"/mcq");
+                mcqref = new Firebase("https://extraclass.firebaseio.com/users/"+keyid+"/mcqs/");
             }
 
             @Override

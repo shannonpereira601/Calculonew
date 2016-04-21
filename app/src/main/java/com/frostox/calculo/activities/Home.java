@@ -66,7 +66,6 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Firebase.setAndroidContext(this);
         ref = new Firebase("https://extraclass.firebaseio.com/");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,7 +105,6 @@ public class Home extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (!current.equals("Standard")) {
-            Log.d("Check", "onnBckClld");
             navPrev();
         } else {
             if (doubleBackToExitPressedOnce) {

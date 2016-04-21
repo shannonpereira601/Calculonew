@@ -10,6 +10,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="com.frostox.calculo.activities.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="ExtraClass"
         android:supportsRtl="true"

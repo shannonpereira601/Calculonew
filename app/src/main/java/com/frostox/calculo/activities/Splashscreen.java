@@ -51,7 +51,7 @@ public class Splashscreen extends Activity {
                         waited += 100;
                     }
                     Intent intent = new Intent(Splashscreen.this,Login.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     Splashscreen.this.finish();
                 } catch (InterruptedException e) {
@@ -59,7 +59,6 @@ public class Splashscreen extends Activity {
                 } finally {
                     Splashscreen.this.finish();
                 }
-
             }
         };
         splashTread.start();

@@ -1,6 +1,8 @@
 package com.frostox.calculo.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +60,7 @@ public class Home extends AppCompatActivity
 
     private HorizontalScrollView scrollView;
 
+    private boolean check;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +167,11 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(Home.this, Login.class);
             ref.unauth();
+            SharedPreferences sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            check = false;
+            editor.putBoolean("check", check);
+            editor.commit();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else if (id == R.id.nav_share) {

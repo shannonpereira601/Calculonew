@@ -5,30 +5,42 @@ package com.frostox.calculo.Nodes;
  */
 public class Usermcq{
 
+    public String getMcqid() {
+        return mcqid;
+    }
+
     private String mcqid;
+    private String topic;
+    private String state;
+    private String answer;
+    private String question;
+
+    public Usermcq(String topic,String mcqid,String state, String answer, String question) {
+
+        this.mcqid = mcqid;
+        this.topic = topic;
+        this.state = state;
+        this.answer = answer;
+        this.question = question;
+    }
+
+    public Usermcq() {
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
 
     public String getTopic() {
         return topic;
     }
 
-    private String topic;
-    private String state;
-
-    public Usermcq() {
-    }
-
-    public Usermcq(String topic, String mcqid, String state) {
-        this.mcqid = mcqid;
-        this.topic = topic;
-        this.state = state;
-    }
-
     public String getState() {
         return state;
-    }
-
-    public String getMcqid() {
-        return mcqid;
     }
 
 }

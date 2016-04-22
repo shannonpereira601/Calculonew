@@ -9,8 +9,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
         android:name="com.frostox.calculo.activities.MyApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="ExtraClass"
         android:supportsRtl="true"
@@ -21,6 +21,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,9 +73,11 @@
         </activity>
         <activity android:name="com.frostox.calculo.activities.Register" />
         <activity android:name="com.frostox.calculo.activities.NotesActivity" />
-        <activity android:name="com.frostox.calculo.activities.Splashscreen">
-
-        </activity>
+        <activity android:name="com.frostox.calculo.activities.Splashscreen"></activity>
+        <activity
+            android:name="com.frostox.calculo.activities.Result"
+            android:label="@string/title_activity_result"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

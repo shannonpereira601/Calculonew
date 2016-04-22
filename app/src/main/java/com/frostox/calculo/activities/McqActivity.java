@@ -2,10 +2,8 @@ package com.frostox.calculo.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,47 +31,43 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.frostox.calculo.Entities.McqItem;
 import com.frostox.calculo.Nodes.MCQs;
-import com.frostox.calculo.Nodes.UserMcqs;
+import com.frostox.calculo.Nodes.Usermcq;
 import com.frostox.calculo.adapters.ResultData;
 import com.frostox.calculo.adapters.Resultadapter;
-import com.frostox.calculo.dao.DaoMaster;
-import com.frostox.calculo.dao.DaoSession;
-import com.frostox.calculo.dao.McqItemDao;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import calculo.frostox.com.calculo.R;
-import io.github.kexanie.library.MathView;
 
 public class McqActivity extends AppCompatActivity {
 
 
     TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, score;
     ImageView imga, imgb, imgc, imgd, imgquestion;
-    String id, namebar, difficulty, noq;
+    String id, namebar, difficulty, noq,userkey, usertopickey;
     CardView cardview;
     Button Skip;
 
     String[] ans, ansA, ansB, ansC, ansD, explanation, explanationType, name, question, topic, type, key;
     String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
-    String[] rvqno2, rvexpurl2, rvurl2, rvansurl2, rvqn2, rvans2, rvexp2;
     int[] ct;
     ScrollView scrollres;
     RelativeLayout choosea, chooseb, choosec, choosed, prntrl;
 
     int count, scorecount;
-    int page;
-
     boolean[] checkanswer;
-    int skipped, correct;
-
+    int skipped, correct, page;
     boolean noqmode = false;
     String userid, keyid;
     RecyclerView rv;
     Resultadapter ra;
-    Firebase ref, mcqref, userRef;
+    Firebase ref, mcqref;
 
     private List<McqItem> mcqItems;
 
@@ -101,6 +94,7 @@ public class McqActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Firebase.setAndroidContext(this);
         click = (TextView) findViewById(R.id.answer);
         questionnumber = (TextView) findViewById(R.id.questionnumber);
         imgquestion = (ImageView) findViewById(R.id.imgquestion);
@@ -115,18 +109,15 @@ public class McqActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
 
         ref = new Firebase("https://extraclass.firebaseio.com/mcqs/");
-        Firebase mainref = new Firebase("https://extraclass.firebaseio.com");
-        userRef = new Firebase("https://extraclass.firebaseio.com/users/");
-        AuthData authData = mainref.getAuth();
-        userid = authData.getUid();
-        getUserKey();
-        System.out.println("nuon " + "User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-        Log.d("nuonAuth", "Logged in");
 
         Intent intent = this.getIntent();
         id = intent.getStringExtra("id");
         difficulty = intent.getStringExtra("difficulty");
         noq = intent.getStringExtra("noq");
+        userkey = intent.getStringExtra("userkey");
+        usertopickey = intent.getStringExtra("usertopickey");
+        mcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey +"/mcqs");
+
         namebar = "Default";
         Query query = ref.orderByChild("topic").equalTo(id);
         query.addValueEventListener(new ValueEventListener() {
@@ -141,6 +132,7 @@ public class McqActivity extends AppCompatActivity {
                 type = new String[length];
                 name = new String[length];
                 question = new String[length];
+                explanationType = new String[length];
                 explanation = new String[length];
                 key = new String[length];
                 count = 0;
@@ -157,6 +149,7 @@ public class McqActivity extends AppCompatActivity {
                         name[count] = mcqtext.getName();
                         question[count] = mcqtext.getQuestion();
                         explanation[count] = mcqtext.getExplanation();
+                        explanationType[count] = mcqtext.getExplanationType();
                         count++;
                     }
                 }
@@ -305,7 +298,7 @@ public class McqActivity extends AppCompatActivity {
             rvqno[i] = ("Q." + (i + 1));
             rvqn[i] = question[i];
             rvurl[i] = "http://www.frostox.com/extraclass/uploads/";
-            rvexpurl[i] = "http://www.frostox.com/extraclass/uploads/";
+
             if (ans[i].equals("A")) {
                 rvans[i] = ansA[i];
             } else if (ans[i].equals("B")) {
@@ -316,7 +309,7 @@ public class McqActivity extends AppCompatActivity {
                 rvans[i] = ansD[i];
             }
             rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/");
-            rvexp[i] = explanation[i];
+
 
         } else if (type[i].equals("image")) {
             textinvisible();
@@ -330,7 +323,7 @@ public class McqActivity extends AppCompatActivity {
             rvqno[i] = ("Q." + (i + 1));
             rvqn[i] = "";
             rvurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "quest");
-            rvexpurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "explanation");
+
             if (ans[i].equals("A")) {
                 rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "A");
             } else if (ans[i].equals("B")) {
@@ -341,8 +334,16 @@ public class McqActivity extends AppCompatActivity {
                 rvansurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "D");
             }
             rvans[i] = "";
+        }
+        if (explanationType[i].equals("text")) {
+            rvexp[i] = explanation[i];
+            rvexpurl[i] = "http://www.frostox.com/extraclass/uploads/";
+        } else if (explanationType[i].equals("image")) {
+            rvexpurl[i] = ("http://www.frostox.com/extraclass/uploads/" + key[i] + "explanation");
             rvexp[i] = "";
         }
+
+
         getSupportActionBar().setTitle(name[i]);
     }
 
@@ -352,7 +353,6 @@ public class McqActivity extends AppCompatActivity {
 
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
-        Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
     }
 
     public void TouchListener(View v, final String option) {
@@ -377,30 +377,31 @@ public class McqActivity extends AppCompatActivity {
 
                         if (ans != null) {
 
-                            UserMcqs mcqs;
+                            Usermcq mcqs;
 
 
                             if (ans[page].equals(option)) {
-                                mcqs = new UserMcqs(option,"date",key[page],"Correct");
+                                mcqs = new Usermcq(usertopickey,key[page],"Correct");
                                 ct[page] = R.drawable.mark;
                                 checkanswer[page] = true;
                                 scorecount++;
                                 onClickNext(null, false);
 
                             } else if (option.equals("skip")) {
-                                mcqs = new UserMcqs(option,"date",key[page],"Wrong");
+                                mcqs = new Usermcq(usertopickey,key[page], "Wrong");
                                 ct[page] = R.drawable.skip;
                                 skipped++;
                                 checkanswer[page] = false;
                                 onClickNext(null, true);
                             } else {
-                                mcqs = new UserMcqs(option,"date",key[page],"Skipped");
+                                mcqs = new Usermcq(usertopickey,key[page], "Skipped");
                                 ct[page] = R.drawable.cross;
                                 checkanswer[page] = false;
                                 onClickNext((View) findViewById(R.id.dummy), false);
                                 // vibrateDevice();
                             }
                             mcqref.push().setValue(mcqs);
+                            vibrateDevice();
                         }
 
                         break;
@@ -483,29 +484,16 @@ public class McqActivity extends AppCompatActivity {
 
     }
 
-    public void getUserKey() {
+    public String getTimeStamp() {
+        String date = DateFormat.getDateTimeInstance().format(new Date());
+        //   Log.d("nuontime",date);
 
-        Query query = userRef.orderByChild("uid").equalTo(userid);
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        Timestamp timestamp = new Timestamp(now.getTime());
+        // Log.d("nuonhopethisisit", String.valueOf(timestamp));
 
-        query.addValueEventListener(new ValueEventListener() {
-            int count = 0;
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int length = (int) dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    keyid = postSnapshot.getKey();
-                    count++;
-                }
-                mcqref = new Firebase("https://extraclass.firebaseio.com/users/"+keyid+"/mcqs/");
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
+        return String.valueOf(timestamp);
     }
 }
 

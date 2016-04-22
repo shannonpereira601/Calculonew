@@ -23,8 +23,13 @@ import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.frostox.calculo.enums.Entities;
 import com.frostox.calculo.fragments.EntityFragment1;
 
@@ -52,7 +57,7 @@ public class Home extends AppCompatActivity
 
     private boolean mcqMode = true;
 
-    private String current = "Standard";
+    private String current = "Standard", userid, userkey;
 
     private Entities currentList = Entities.STANDARD;
 
@@ -61,12 +66,17 @@ public class Home extends AppCompatActivity
     private HorizontalScrollView scrollView;
 
     private boolean check;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         ref = new Firebase("https://extraclass.firebaseio.com/");
+        AuthData authData = ref.getAuth();
+        userid = authData.getUid();
+        getUserKey();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,7 +90,7 @@ public class Home extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         standardFragment = new EntityFragment1();
@@ -172,6 +182,10 @@ public class Home extends AppCompatActivity
             editor.commit();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        } else if (id == R.id.results) {
+            Intent intent = new Intent(this, Result.class);
+            intent.putExtra("userkey", userkey);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             Snackbar.make(coordinatorLayout, "Not Implemented Yet", Snackbar.LENGTH_LONG).show();
         } else if (id == R.id.nav_send) {
@@ -210,6 +224,7 @@ public class Home extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putString("current", current);
                 bundle.putString("id", key);
+                bundle.putString("userkey", userkey);
                 // set Fragmentclass Arguments
                 subjectFragment.setArguments(bundle);
 
@@ -232,6 +247,7 @@ public class Home extends AppCompatActivity
                 bundle = new Bundle();
                 bundle.putString("current", current);
                 bundle.putString("id", key);
+                bundle.putString("userkey", userkey);
                 // set Fragmentclass Arguments
                 topicFragment.setArguments(bundle);
                 fragmentManager = getSupportFragmentManager();
@@ -252,6 +268,7 @@ public class Home extends AppCompatActivity
                     bundle = new Bundle();
                     bundle.putString("current", current);
                     bundle.putString("id", key);
+                    bundle.putString("userkey", userkey);
                     mcqFragment.setArguments(bundle);
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
@@ -268,6 +285,7 @@ public class Home extends AppCompatActivity
                     bundle = new Bundle();
                     bundle.putString("current", current);
                     bundle.putString("id", key);
+                    bundle.putString("userkey", userkey);
                     noteFragment.setArguments(bundle);
                     fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
@@ -346,7 +364,27 @@ public class Home extends AppCompatActivity
         });
     }
 
-    public void navRoot() {
+
+    public void getUserKey() {
+        ;
+        Firebase userRef = ref.child("users");
+        Query query = userRef.orderByChild("uid").equalTo(userid);
+
+        query.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    userkey = postSnapshot.getKey();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
 
     }
 }

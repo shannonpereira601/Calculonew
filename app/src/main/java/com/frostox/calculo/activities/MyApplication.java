@@ -13,15 +13,15 @@ public class MyApplication extends Application{
         super.onCreate();
         Firebase.setAndroidContext(this);
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
-
         Firebase refCourses = new Firebase("https://extraclass.firebaseio.com/courses");
         Firebase refSubjects = new Firebase("https://extraclass.firebaseio.com/subjects");
         Firebase refNotes = new Firebase("https://extraclass.firebaseio.com/notes");
         Firebase refMcqs = new Firebase("https://extraclass.firebaseio.com/mcqs");
-
+        Firebase refUsers = new Firebase("https://extraclass.firebaseio.com/users");
         refCourses.keepSynced(true);
         refSubjects.keepSynced(true);
         refNotes.keepSynced(true);
         refMcqs.keepSynced(true);
+        refUsers.keepSynced(true);
     }
 }

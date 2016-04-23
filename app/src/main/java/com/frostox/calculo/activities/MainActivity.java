@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("onnrecreate","reached here");
         sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         checkLogin();
         if (check) {

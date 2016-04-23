@@ -1,8 +1,11 @@
 package com.frostox.calculo.Nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by shannonpereira601 on 23/04/16.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
     private String fullName;
     private String email;

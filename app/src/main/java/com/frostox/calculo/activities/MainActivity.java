@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         checkLogin();
         if (check) {
-            Intent i = new Intent(this, Home.class);
+            Intent i = new Intent(this, Login.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getSupportActionBar().hide();
-        imageView = (ImageView) findViewById(R.id.imageView1);
+        imageView = (ImageView) findViewById(R.id.imageView);
     }
 
     @Override
@@ -84,17 +84,10 @@ public class MainActivity extends AppCompatActivity {
     public void goLogin(View v) {
         Intent intent = new Intent(this, Login.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        setcheck();
         startActivity(intent);
     }
 
-    public void setcheck() {
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        check = true;
-        editor.putBoolean("check", check);
-        editor.commit();
-    }
 
     public boolean checkLogin() {
         check = sharedPreferences.getBoolean("check", false);

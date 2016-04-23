@@ -2,6 +2,7 @@ package com.frostox.calculo.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.TextInputLayout;
@@ -31,14 +32,22 @@ public class Login extends AppCompatActivity {
     String emailtext;
     EditText email, pass;
     Firebase ref;
-
+    boolean check;
+    SharedPreferences sharedPreferences;
     //#firebasetest
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        if(checkLogin())
+        {
+            Intent i = new Intent(this, Home.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         Firebase.setAndroidContext(this);
         final Firebase ref = new Firebase("https://extraclass.firebaseio.com");
         email = (EditText) findViewById(R.id.e1);
@@ -68,12 +77,13 @@ public class Login extends AppCompatActivity {
                 }
 
                 if (isValidEmail(emailtext) && (password.length() != 0 && password.length() < 13)) {
-                   // ref.authWithPassword(, "password", authResultHandler);
+                    // ref.authWithPassword(, "password", authResultHandler);
+                    setcheck();
                     ref.authWithPassword(emailtext, password, new Firebase.AuthResultHandler() {
                         @Override
                         public void onAuthenticated(AuthData authData) {
                             System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                            Log.d("onnAuth","Logged in");
+                            Log.d("onnAuth", "Logged in");
 
                            /* Map<String, String> map = new HashMap<String, String>();
                             map.put("provider", authData.getProvider());
@@ -83,7 +93,7 @@ public class Login extends AppCompatActivity {
                             ref.child("users").child(authData.getUid()).setValue(map);*/
 
                             Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this,Home.class);
+                            Intent intent = new Intent(Login.this, Home.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
 
@@ -101,21 +111,22 @@ public class Login extends AppCompatActivity {
                             });
 
                         }
+
                         @Override
                         public void onAuthenticationError(FirebaseError firebaseError) {
                             // there was an error
                             switch (firebaseError.getCode()) {
                                 case FirebaseError.USER_DOES_NOT_EXIST:
-                                    Log.d("onnAuthError1","User doesnt exist");
-                                    Toast.makeText(Login.this,"User does not exist",Toast.LENGTH_SHORT).show();
+                                    Log.d("onnAuthError1", "User doesnt exist");
+                                    Toast.makeText(Login.this, "User does not exist", Toast.LENGTH_SHORT).show();
                                     break;
                                 case FirebaseError.INVALID_PASSWORD:
-                                    Log.d("onnAuthError2","Wrong Pass");
+                                    Log.d("onnAuthError2", "Wrong Pass");
                                     Toast.makeText(Login.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    Log.d("onnAuthError3","Default");
-                                    Toast.makeText(Login.this,"Please Try Again",Toast.LENGTH_SHORT).show();
+                                    Log.d("onnAuthError3", "Default");
+                                    Toast.makeText(Login.this, "Please Try Again", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -146,7 +157,19 @@ public class Login extends AppCompatActivity {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    public boolean checkLogin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        check = sharedPreferences.getBoolean("check", false);
+        return check;
+    }
 
+    public void setcheck() {
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        check = true;
+        editor.putBoolean("check", check);
+        editor.commit();
+    }
    /* private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;

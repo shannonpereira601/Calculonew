@@ -415,19 +415,6 @@ public class Home extends AppCompatActivity
                     User user = postSnapshot.getValue(User.class);
                     Calendar calendar = Calendar.getInstance();
                     java.util.Date now = calendar.getTime();
-
-                 /* String FinalDate=  "23/4/2016";
-                    SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
-
-                    //Setting dates
-                    Date testdate;
-                    testdate = null;
-                    try {
-                        testdate = dates.parse(FinalDate);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-*/
                     long time = user.getTime();
                     long difference = now.getTime()-time;
 
@@ -441,7 +428,7 @@ public class Home extends AppCompatActivity
                     }
                     if(differenceDates != 7)
                     {
-                        Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+                     //   Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
                     }
                 }
             }

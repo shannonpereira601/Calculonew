@@ -10,6 +10,12 @@
             android:id="@+id/nav_notes"
             android:icon="@drawable/ic_notes"
             android:title="Notes" />
+
+        <item
+            android:id="@+id/results"
+            android:icon="@drawable/ic_notes"
+            android:title="Results" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"

@@ -25,16 +25,23 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
+import com.frostox.calculo.Entities.Topic;
 import com.frostox.calculo.Nodes.Notes;
 import com.frostox.calculo.Nodes.Standards;
 import com.frostox.calculo.Nodes.Subjects;
 import com.frostox.calculo.Nodes.Topics;
+import com.frostox.calculo.Nodes.Usermcq;
+import com.frostox.calculo.Nodes.Usertopics;
 import com.frostox.calculo.activities.Home;
 import com.frostox.calculo.activities.McqActivity;
 import com.frostox.calculo.activities.McqActivityold;
 import com.frostox.calculo.adapters.Data;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import calculo.frostox.com.calculo.R;
@@ -52,23 +59,23 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "id";
     private static final String ARG_PARAM2 = "current";
+    private static final String ARG_PARAM3 = "userkey";
     List<Data> data;
 
     private RecyclerView recyclerView;
 
-    Firebase ref;
+    private Firebase ref, topicref;
 
     private FirebaseRecyclerAdapter recyclerAdapter;
 
     private RecyclerView.LayoutManager layoutManager;
 
     // TODO: Rename and change types of parameters
-    private String id;
+    private String id, userkey;
     private String current = "Standard";
 
-    private String[] courses = {"10th", "CET Foundation", "11th Science", "12th Sci"};
     private String[] key;
-    private String name, numberofq, difficulty;
+    private String name, numberofq, difficulty, topicname;
     boolean rvexists;
 
     private OnFragmentInteractionListener mListener;
@@ -116,6 +123,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             id = getArguments().getString(ARG_PARAM1);
             Log.d("onnCreate", id);
             current = getArguments().getString(ARG_PARAM2);
+            userkey = getArguments().getString(ARG_PARAM3);
         }
 
         ref = new Firebase("https://extraclass.firebaseio.com/");
@@ -185,6 +193,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
             };
         } else if (current.equals("MCQ")) {
             rvexists = false;
+            getTopicName(id);
             LinearLayout ll = (LinearLayout) view.findViewById(R.id.ll);
             ll.setVisibility(View.VISIBLE);
             Button Proceed = (Button) view.findViewById(R.id.PROCEED);
@@ -213,17 +222,24 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
             spinnernoq.setOnItemSelectedListener(this);
             spinnerdifficulty.setOnItemSelectedListener(this);
-
-
             Toast.makeText(getContext(), "Please select No. of Questions and Difficulty", Toast.LENGTH_LONG).show();
 
             Proceed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    topicref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/topics/");
+                    Usertopics usertopics = new Usertopics(topicname, id, getTimeStamp());
+                    Firebase pushtopic = topicref.push();
+                    String usertopickey = pushtopic.getKey();
+                    pushtopic.setValue(usertopics);
                     Intent intent = new Intent(getContext(), McqActivity.class);
                     intent.putExtra("id", id);
                     intent.putExtra("difficulty", difficulty);
+                    intent.putExtra("userkey", userkey);
+                    intent.putExtra("usertopickey",usertopickey);
                     intent.putExtra("noq", numberofq);
+
                     startActivity(intent);
                 }
             });
@@ -357,9 +373,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
     }
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder {
-        TextView label;
-
-
+        public TextView label;
         public DataObjectHolder(View itemView) {
             super(itemView);
             label = (TextView) itemView.findViewById(R.id.recycler_view_item_text);
@@ -369,5 +383,39 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
     public interface MyClickListener {
         public void onItemClick(int position, View v);
+    }
+
+    public void getTopicName(String id) {
+        Firebase topicref = ref.child("topics");
+        Log.d("Checktopicid", id);
+        Query query = topicref.orderByKey().equalTo(id);
+        query.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Topics topics = postSnapshot.getValue(Topics.class);
+                    topicname = topics.getName();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+    }
+
+    public String getTimeStamp() {
+        String date = DateFormat.getDateTimeInstance().format(new Date());
+        //   Log.d("nuontime",date);
+
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        Timestamp timestamp = new Timestamp(now.getTime());
+        // Log.d("nuonhopethisisit", String.valueOf(timestamp));
+
+        return String.valueOf(timestamp);
     }
 }

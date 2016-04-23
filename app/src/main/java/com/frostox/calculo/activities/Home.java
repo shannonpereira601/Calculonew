@@ -347,9 +347,11 @@ public class Home extends AppCompatActivity
                 intent.putExtra("name", name);
                 intent.putExtra("id", key);
                 startActivity(intent);
+                break;
 
             case "Timeout":
                 Toast.makeText(getBaseContext(),"Sorry your trial period is up",Toast.LENGTH_LONG).show();
+                break;
         }
 
 
@@ -423,12 +425,12 @@ public class Home extends AppCompatActivity
                     differenceDates = difference / (24 * 60 * 60 * 1000);
                     if(differenceDates == 7 && user.getActivated()==false)
                     {
-                        Toast.makeText(getBaseContext(),"Your trial period is up",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(),"Your trial period is up " +differenceDates,Toast.LENGTH_LONG).show();
                         current = "Timeout";
                     }
                     if(differenceDates != 7)
                     {
-                     //   Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+                     Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
                     }
                 }
             }

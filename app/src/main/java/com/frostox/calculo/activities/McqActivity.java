@@ -93,6 +93,7 @@ public class McqActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Firebase.setAndroidContext(this);
+        Skip = (Button) findViewById(R.id.skip);
         click = (TextView) findViewById(R.id.answer);
         questionnumber = (TextView) findViewById(R.id.questionnumber);
         imgquestion = (ImageView) findViewById(R.id.imgquestion);
@@ -181,7 +182,6 @@ public class McqActivity extends AppCompatActivity {
         rvans = new String[count];
         rvexp = new String[count];
 
-        Skip = (Button) findViewById(R.id.skip);
         cardview = (CardView) findViewById(R.id.card_view);
         choosea = (RelativeLayout) findViewById(R.id.choosea);
         chooseb = (RelativeLayout) findViewById(R.id.chooseb);

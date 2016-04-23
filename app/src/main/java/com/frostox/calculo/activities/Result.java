@@ -181,6 +181,12 @@ public class Result extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recyclerAdapter.cleanup();
+        recyclerAdapter2.cleanup();
+    }
 
     public void getKey(Query query) {
         query.addValueEventListener(new ValueEventListener() {

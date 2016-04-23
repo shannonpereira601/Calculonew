@@ -412,7 +412,7 @@ public class Home extends AppCompatActivity
                     Calendar calendar = Calendar.getInstance();
                     java.util.Date now = calendar.getTime();
 
-                 /*   String FinalDate=  "23/4/2016";
+                 /* String FinalDate=  "23/4/2016";
                     SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
 
                     //Setting dates
@@ -439,7 +439,6 @@ public class Home extends AppCompatActivity
                     if(differenceDates != 7)
                     {
                         Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
-
                     }
                 }
             }

@@ -17,6 +17,11 @@
             android:title="Results" />
 
         <item
+            android:id="@+id/activate"
+            android:icon="@drawable/ic_notes"
+            android:title="Activate" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />

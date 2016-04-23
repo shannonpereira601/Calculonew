@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,7 @@ import com.firebase.client.ValueEventListener;
 
 import calculo.frostox.com.calculo.R;
 
-public class Activate extends AppCompatActivity implements View.OnClickListener {
+public class Activate extends AppCompatActivity{
 
     EditText keyEditText;
     Button act;
@@ -39,7 +40,6 @@ public class Activate extends AppCompatActivity implements View.OnClickListener 
 
         keyEditText = (EditText) findViewById(R.id.productKey);
         act = (Button) findViewById(R.id.activate);
-        act.setOnClickListener(this);
         tv = (TextView) findViewById(R.id.tvAcc);
         tv.setVisibility(View.INVISIBLE);
 
@@ -49,6 +49,7 @@ public class Activate extends AppCompatActivity implements View.OnClickListener 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     pushId = postSnapshot.getKey();
+                    Log.d("Checkuid",pushId);
                 }
             }
 
@@ -69,9 +70,10 @@ public class Activate extends AppCompatActivity implements View.OnClickListener 
         super.onResume();
     }
 
-    @Override
-    public void onClick(View v) {
-        if (keyEditText.equals(ref.getAuth().getUid())) {
+    public void onActivate(View v) {
+        Log.d("CheckuidonClicked",ref.getAuth().getUid());
+        if (keyEditText.getText().toString().equals(ref.getAuth().getUid())) {
+            Log.d("Checkuidhere","Reached");
             keyEditText.setVisibility(View.INVISIBLE);
             act.setVisibility(View.INVISIBLE);
             tv.setVisibility(View.VISIBLE);

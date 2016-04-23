@@ -199,6 +199,10 @@ public class Home extends AppCompatActivity
             if (current.equals("Note"))
                 navPrev();
             //TODO Fragement operations
+        }else if (id == R.id.activate) {
+           Intent intent = new Intent(Home.this,Activate.class);
+            startActivity(intent);
+            //TODO Fragement operations
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(Home.this, Login.class);
             ref.unauth();

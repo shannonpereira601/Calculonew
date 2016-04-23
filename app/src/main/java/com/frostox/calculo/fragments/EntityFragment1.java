@@ -229,7 +229,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 public void onClick(View v) {
 
                     topicref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/topics/");
-                    Usertopics usertopics = new Usertopics(topicname, id, getTimeStamp());
+                    Usertopics usertopics = new Usertopics(topicname, id, getTimeStamp(),difficulty);
                     Firebase pushtopic = topicref.push();
                     String usertopickey = pushtopic.getKey();
                     pushtopic.setValue(usertopics);
@@ -239,7 +239,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                     intent.putExtra("userkey", userkey);
                     intent.putExtra("usertopickey",usertopickey);
                     intent.putExtra("noq", numberofq);
-
                     startActivity(intent);
                 }
             });
@@ -407,6 +406,18 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         });
     }
 
+    public Timestamp getTimeStamp1() {
+        String date = DateFormat.getDateTimeInstance().format(new Date());
+        //   Log.d("nuontime",date);
+
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        Timestamp timestamp = new Timestamp(now.getTime());
+        // Log.d("nuonhopethisisit", String.valueOf(timestamp));
+
+        return timestamp;
+    }
+
     public String getTimeStamp() {
         String date = DateFormat.getDateTimeInstance().format(new Date());
         //   Log.d("nuontime",date);
@@ -416,6 +427,6 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         Timestamp timestamp = new Timestamp(now.getTime());
         // Log.d("nuonhopethisisit", String.valueOf(timestamp));
 
-        return String.valueOf(timestamp);
+        return date;
     }
 }

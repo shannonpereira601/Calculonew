@@ -50,7 +50,7 @@ public class McqActivity extends AppCompatActivity {
 
     TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, score;
     ImageView imga, imgb, imgc, imgd, imgquestion;
-    String id, namebar, difficulty, noq,userkey, usertopickey;
+    String id, namebar, difficulty, noq, userkey, usertopickey;
     CardView cardview;
     Button Skip;
 
@@ -64,12 +64,10 @@ public class McqActivity extends AppCompatActivity {
     boolean[] checkanswer;
     int skipped, correct, page;
     boolean noqmode = false;
-    String userid, keyid;
     RecyclerView rv;
     Resultadapter ra;
     Firebase ref, mcqref;
 
-    private List<McqItem> mcqItems;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -116,10 +114,10 @@ public class McqActivity extends AppCompatActivity {
         noq = intent.getStringExtra("noq");
         userkey = intent.getStringExtra("userkey");
         usertopickey = intent.getStringExtra("usertopickey");
-        mcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey +"/mcqs");
-
+        mcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/mcqs");
         namebar = "Default";
         Query query = ref.orderByChild("topic").equalTo(id);
+        count = 0;
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,7 +133,6 @@ public class McqActivity extends AppCompatActivity {
                 explanationType = new String[length];
                 explanation = new String[length];
                 key = new String[length];
-                count = 0;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     key[count] = postSnapshot.getKey();
                     MCQs mcqtext = postSnapshot.getValue(MCQs.class);
@@ -218,6 +215,7 @@ public class McqActivity extends AppCompatActivity {
         TouchListener(choosed, "D");
         TouchListener(Skip, "skip");
         page = 0;
+        Log.d("Testreachedinit",type[page] + ".." + ansA[page]);
         checkanswer = new boolean[count];
         load(0);
     }
@@ -233,7 +231,7 @@ public class McqActivity extends AppCompatActivity {
 
     }
 
-    public void onClickNext(View v, boolean skip) {
+    public void onClickNext(View v) {
         ++page;
 
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
@@ -285,7 +283,6 @@ public class McqActivity extends AppCompatActivity {
     }
 
     public void load(int i) {
-
         if (type[i].equals("text")) {
             textvisible();
             imginvisible();
@@ -364,6 +361,7 @@ public class McqActivity extends AppCompatActivity {
             public final static int FINGER_DRAGGING = 2;
             public final static int FINGER_UNDEFINED = 3;
             private int fingerState = FINGER_RELEASED;
+            private String state;
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -377,29 +375,37 @@ public class McqActivity extends AppCompatActivity {
 
                         if (ans != null) {
 
-                            Usermcq mcqs;
+                            Usermcq mcqs = null;
 
 
                             if (ans[page].equals(option)) {
-                                mcqs = new Usermcq(usertopickey,key[page],"Correct"+ans[page],ansA[page],question[page]);
                                 ct[page] = R.drawable.mark;
+                                state = "Correct";
                                 checkanswer[page] = true;
                                 scorecount++;
-                                onClickNext(null, false);
+                                onClickNext(null);
 
                             } else if (option.equals("skip")) {
-                                mcqs = new Usermcq(usertopickey,key[page], "Wrong"+ans[page],ansA[page],question[page]);
                                 ct[page] = R.drawable.skip;
+                                state = "Skip";
                                 skipped++;
                                 checkanswer[page] = false;
-                                onClickNext(null, true);
+                                onClickNext(null);
                             } else {
-                                mcqs = new Usermcq(usertopickey,key[page], "Skipped"+ans[page],ansA[page],question[page]);
                                 ct[page] = R.drawable.cross;
+                                state = "Wrong";
                                 checkanswer[page] = false;
-                                onClickNext((View) findViewById(R.id.dummy), false);
-                                // vibrateDevice();
+                                onClickNext((View) findViewById(R.id.dummy));
                             }
+                            Log.d("Testreachedtouch",state + ".." + usertopickey + ".." +type[page-1] + ".." + ansA[page-1]);
+                            if (ans[page-1].equals("A"))
+                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
+                            else if (ans[page-1].equals("B"))
+                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
+                            else if (ans[page-1].equals("C"))
+                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
+                            else if (ans[page-1].equals("D"))
+                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
                             mcqref.push().setValue(mcqs);
                             vibrateDevice();
                         }
@@ -482,18 +488,6 @@ public class McqActivity extends AppCompatActivity {
         imgc.setVisibility(View.INVISIBLE);
         imgd.setVisibility(View.INVISIBLE);
 
-    }
-
-    public String getTimeStamp() {
-        String date = DateFormat.getDateTimeInstance().format(new Date());
-        //   Log.d("nuontime",date);
-
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date now = calendar.getTime();
-        Timestamp timestamp = new Timestamp(now.getTime());
-        // Log.d("nuonhopethisisit", String.valueOf(timestamp));
-
-        return String.valueOf(timestamp);
     }
 }
 

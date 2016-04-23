@@ -3,7 +3,7 @@ package com.frostox.calculo.Nodes;
 /**
  * Created by shannonpereira601 on 20/04/16.
  */
-public class Usermcq{
+public class Usermcq {
 
     public String getMcqid() {
         return mcqid;
@@ -15,8 +15,14 @@ public class Usermcq{
     private String answer;
     private String question;
 
-    public Usermcq(String topic,String mcqid,String state, String answer, String question) {
+    public String getType() {
+        return type;
+    }
 
+    private String type;
+
+    public Usermcq(String topic, String mcqid, String state, String answer, String question, String type) {
+        this.type = type;
         this.mcqid = mcqid;
         this.topic = topic;
         this.state = state;

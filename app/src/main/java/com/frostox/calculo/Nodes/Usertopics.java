@@ -9,10 +9,17 @@ public class Usertopics{
     private String topicid;
     public String timestamp;
 
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public String difficulty;
+
     public Usertopics() {
     }
 
-    public Usertopics(String name, String topicid, String timestamp) {
+    public Usertopics(String name, String topicid, String timestamp, String difficulty) {
+        this.difficulty = difficulty;
         this.name = name;
         this.topicid = topicid;
         this.timestamp = timestamp;

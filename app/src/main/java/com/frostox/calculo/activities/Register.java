@@ -80,7 +80,8 @@ public class Register extends AppCompatActivity {
                     });*/
 
                     ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
-                        Boolean status;
+                        Boolean status, activated;
+                        Long instdDate;
 
                         @Override
                         public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -88,16 +89,14 @@ public class Register extends AppCompatActivity {
                             ref.authWithPassword(Email.getText().toString(), Pass.getText().toString(), new Firebase.AuthResultHandler() {
                                 @Override
                                 public void onAuthenticated(AuthData authData) {
-                                    User user = new User(Email.getText().toString(),  authData.getUid(), Fname.getText().toString(), status);
+                                    User user = new User(Email.getText().toString(), authData.getUid(), Fname.getText().toString(), status, activated, instdDate);
                                     Firebase users = ref.child("users");
                                     users.child(authData.getUid());
-                                   // String ref = users.push().setValue(user);
                                     Firebase newref = users.push();
                                     String key = newref.getKey();
                                     newref.setValue(user);
                                     Intent intent = new Intent(Register.this, Login.class);
                                     startActivity(intent);
-                                    //changed this file
                                 }
 
                                 @Override
@@ -120,20 +119,23 @@ public class Register extends AppCompatActivity {
     }
 
 
-       public class User {
+    public class User {
         private String fullName;
         private String email;
         private String uid;
-        private Boolean blocked;
+        private Boolean blocked, activated;
+        private Long installedDate;
 
         public User() {
         }
 
-        public User(String email, String uid, String fullName, Boolean blocked) {
+        public User(String email, String uid, String fullName, Boolean blocked, Boolean activated, long installedDate) {
             this.fullName = fullName;
             this.uid = uid;
             this.email = email;
             this.blocked = blocked;
+            this.activated = activated;
+            this.installedDate = installedDate;
         }
 
         public String getFullName() {
@@ -151,8 +153,14 @@ public class Register extends AppCompatActivity {
         public Boolean getBlocked() {
             return false;
         }
+
+        public Boolean getActivate() {
+            return false;
+        }
+
+        public Long getInstalledDate() {return Long.parseLong(null);}
     }
-    
+
 
     public static boolean isEmailValid(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();

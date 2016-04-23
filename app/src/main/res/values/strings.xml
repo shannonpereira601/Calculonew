@@ -23,6 +23,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email ID</string>
     <string name="register">Register</string>
+    <string name="active_acc">Your account is \n now ACTIVE!</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

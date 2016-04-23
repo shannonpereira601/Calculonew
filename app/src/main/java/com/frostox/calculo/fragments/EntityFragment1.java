@@ -425,8 +425,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         Timestamp timestamp = new Timestamp(now.getTime());
-        // Log.d("nuonhopethisisit", String.valueOf(timestamp));
-
+        // Log.d("nuonhopethisisit", String.valueOf(timestamp))
         return date;
     }
 }

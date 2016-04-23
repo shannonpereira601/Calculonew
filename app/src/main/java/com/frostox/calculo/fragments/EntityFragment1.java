@@ -25,7 +25,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
-import com.frostox.calculo.Entities.Topic;
 import com.frostox.calculo.Nodes.Notes;
 import com.frostox.calculo.Nodes.Standards;
 import com.frostox.calculo.Nodes.Subjects;
@@ -34,7 +33,6 @@ import com.frostox.calculo.Nodes.Usermcq;
 import com.frostox.calculo.Nodes.Usertopics;
 import com.frostox.calculo.activities.Home;
 import com.frostox.calculo.activities.McqActivity;
-import com.frostox.calculo.activities.McqActivityold;
 import com.frostox.calculo.adapters.Data;
 
 import java.sql.Timestamp;
@@ -222,7 +220,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
 
             spinnernoq.setOnItemSelectedListener(this);
             spinnerdifficulty.setOnItemSelectedListener(this);
-            Toast.makeText(getContext(), "Please select No. of Questions and Difficulty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please select No. of Questions and Difficulty", Toast.LENGTH_SHORT).show();
 
             Proceed.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -12,16 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.frostox.calculo.Entities.Logged;
-import com.frostox.calculo.dao.DaoMaster;
-import com.frostox.calculo.dao.DaoSession;
-import com.frostox.calculo.dao.LoggedDao;
-
 import java.util.List;
 
 import calculo.frostox.com.calculo.R;
-import de.greenrobot.dao.query.Query;
 
 public class MainActivity extends AppCompatActivity {
 

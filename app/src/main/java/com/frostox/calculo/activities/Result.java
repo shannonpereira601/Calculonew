@@ -108,6 +108,8 @@ public class Result extends AppCompatActivity {
                         recyclerView.setVisibility(View.GONE);
                     }
                 });
+
+
             }
         };
 
@@ -188,6 +190,7 @@ public class Result extends AppCompatActivity {
         recyclerAdapter2.cleanup();
     }
 
+
     public void getKey(Query query) {
         query.addValueEventListener(new ValueEventListener() {
 
@@ -200,6 +203,7 @@ public class Result extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     key[count1] = postSnapshot.getKey();
+                  //  Usertopics usertopics = postSnapshot.getValue(Usertopics.class);
                     count1++;
                 }
             }

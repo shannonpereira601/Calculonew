@@ -35,7 +35,6 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.frostox.calculo.Nodes.User;
 import com.frostox.calculo.adapters.Data;
-import com.frostox.calculo.enums.Entities;
 import com.frostox.calculo.fragments.EntityFragment1;
 
 import java.sql.Time;
@@ -70,8 +69,6 @@ public class Home extends AppCompatActivity
     private boolean mcqMode = true;
 
     private String current = "Standard", userid, userkey, date, dateToday;
-
-    private Entities currentList = Entities.STANDARD;
 
     private TextView courses, subjects, topics, mcqnotes;
 

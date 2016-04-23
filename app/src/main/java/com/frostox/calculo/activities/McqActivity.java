@@ -29,7 +29,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
-import com.frostox.calculo.Entities.McqItem;
 import com.frostox.calculo.Nodes.MCQs;
 import com.frostox.calculo.Nodes.Usermcq;
 import com.frostox.calculo.adapters.ResultData;
@@ -344,13 +343,10 @@ public class McqActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(name[i]);
     }
 
-    public void vibrateDevice() {
+   /* public void vibrateDevice() {
         Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(500);
-
-        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
-                .findViewById(android.R.id.content)).getChildAt(0);
-    }
+    }*/
 
     public void TouchListener(View v, final String option) {
 
@@ -407,7 +403,6 @@ public class McqActivity extends AppCompatActivity {
                             else if (ans[page-1].equals("D"))
                                 mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
                             mcqref.push().setValue(mcqs);
-                            vibrateDevice();
                         }
 
                         break;

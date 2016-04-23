@@ -31,7 +31,6 @@ public class Activate extends AppCompatActivity {
         setContentView(R.layout.activity_activate);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        keyEditText = (EditText) findViewById(R.id.editText);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -33,11 +33,14 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.frostox.calculo.Nodes.User;
 import com.frostox.calculo.adapters.Data;
 import com.frostox.calculo.enums.Entities;
 import com.frostox.calculo.fragments.EntityFragment1;
 
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,6 +79,8 @@ public class Home extends AppCompatActivity
 
     int  installedDate, currDate,valipPeriod;
 
+    long differenceDates;
+
     private boolean check;
 
 
@@ -83,35 +88,6 @@ public class Home extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        try {
-
-            //Dates to compare
-            String CurrentDate=  "09/1/2015";
-            String FinalDate=  "09/8/2015";
-
-            Date date1;
-            Date date2;
-
-            SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
-
-            //Setting dates
-            date1 = dates.parse(CurrentDate);
-            date2 = dates.parse(FinalDate);
-
-            //Comparing dates
-            long difference = date1.getTime() - date2.getTime();
-            long differenceDates = difference / (24 * 60 * 60 * 1000);
-
-            //Convert long to String
-            String dayDifference = Long.toString(differenceDates);
-
-            Log.d("Testdifferencelong","HERE: " + difference);
-            Log.d("Testdifference","HERE: " + dayDifference);
-
-        } catch (Exception exception) {
-            Log.e("DIDN'T WORK", "exception " + exception);
-        }
-
 
         ref = new Firebase("https://extraclass.firebaseio.com/");
         AuthData authData = ref.getAuth();
@@ -275,6 +251,7 @@ public class Home extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putString("current", current);
                 bundle.putString("id", key);
+
                 bundle.putString("userkey", userkey);
                 // set Fragmentclass Arguments
                 subjectFragment.setArguments(bundle);
@@ -366,6 +343,9 @@ public class Home extends AppCompatActivity
                 intent.putExtra("name", name);
                 intent.putExtra("id", key);
                 startActivity(intent);
+
+            case "Timeout":
+                Toast.makeText(getBaseContext(),"Sorry your trial period is up",Toast.LENGTH_LONG).show();
         }
 
 
@@ -428,6 +408,39 @@ public class Home extends AppCompatActivity
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     userkey = postSnapshot.getKey();
+                    User user = postSnapshot.getValue(User.class);
+                    Calendar calendar = Calendar.getInstance();
+                    java.util.Date now = calendar.getTime();
+
+                 /*   String FinalDate=  "23/4/2016";
+                    SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
+
+                    //Setting dates
+                    Date testdate;
+                    testdate = null;
+                    try {
+                        testdate = dates.parse(FinalDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+*/
+                    long time = user.getTime();
+                    long difference = now.getTime()-time;
+
+                    Log.d("Checkdate",now.getTime()+"");
+
+                    differenceDates = difference / (24 * 60 * 60 * 1000);
+                    if(differenceDates == 7)
+                    {
+                        Toast.makeText(getBaseContext(),"Your trial period is up",Toast.LENGTH_LONG).show();
+                        current = "Timeout";
+
+                    }
+                    if(differenceDates != 7)
+                    {
+                        Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+
+                    }
                 }
             }
 

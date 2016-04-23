@@ -14,10 +14,12 @@ import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.frostox.calculo.Nodes.User;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -25,6 +27,9 @@ import java.util.Map;
 import calculo.frostox.com.calculo.R;
 
 public class Register extends AppCompatActivity {
+
+    Date date1;
+    Date date2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,34 @@ public class Register extends AppCompatActivity {
         Email = (EditText) findViewById(R.id.email);
         Pass = (EditText) findViewById(R.id.regPass);
         Cpass = (EditText) findViewById(R.id.confPass);
+
+        try {
+
+            //Dates to compare
+            String CurrentDate=  "09/8/2015";
+            String FinalDate=  "09/1/2015";
+
+
+            SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
+
+            //Setting dates
+            date1 = dates.parse(CurrentDate);
+            date2 = dates.parse(FinalDate);
+
+            //Comparing dates
+            long difference = date1.getTime() - date2.getTime();
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
+
+       /*   Log.d("Testdifferencedatetimes", date1.getTime() + " " + date2.getTime());
+            Log.d("Testdifference","HERE: " + difference);
+            Log.d("Testdifferencedates","HERE: " +differenceDates);*/
+
+        } catch (Exception exception) {
+            Log.e("DIDN'T WORK", "exception " + exception);
+        }
 
 
         Button register = (Button) findViewById(R.id.register);
@@ -123,51 +156,6 @@ public class Register extends AppCompatActivity {
         });
     }
 
-
-    public class User {
-        private String fullName;
-        private String email;
-        private String uid;
-        private boolean blocked;
-        private long time;
-        private boolean activated;
-
-        public User() {
-        }
-
-        public User(String email, String uid, String fullName, boolean blocked, boolean activated, long time) {
-            this.fullName = fullName;
-            this.activated = activated;
-            this.time = time;
-            this.uid = uid;
-            this.email = email;
-            this.blocked = blocked;
-        }
-
-        public String getFullName() {
-            return fullName;
-        }
-
-        public String getUid() {
-            return uid;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public boolean getBlocked() {
-            return false;
-        }
-
-        public boolean getActivated() {
-            return activated;
-        }
-
-        public long getTime() {
-            return time;
-        }
-    }
 
 
     public long getTime() {

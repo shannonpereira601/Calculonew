@@ -15,6 +15,11 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import calculo.frostox.com.calculo.R;
@@ -80,8 +85,6 @@ public class Register extends AppCompatActivity {
                     });*/
 
                     ref.createUser(Email.getText().toString(), Pass.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
-                        Boolean status, activated;
-                        Long instdDate;
 
                         @Override
                         public void onSuccess(Map<String, Object> stringObjectMap) {
@@ -89,14 +92,16 @@ public class Register extends AppCompatActivity {
                             ref.authWithPassword(Email.getText().toString(), Pass.getText().toString(), new Firebase.AuthResultHandler() {
                                 @Override
                                 public void onAuthenticated(AuthData authData) {
-                                    User user = new User(Email.getText().toString(), authData.getUid(), Fname.getText().toString(), status, activated, instdDate);
+                                    User user = new User(Email.getText().toString(), authData.getUid(), Fname.getText().toString(),false,false,getTime());
                                     Firebase users = ref.child("users");
                                     users.child(authData.getUid());
+                                    // String ref = users.push().setValue(user);
                                     Firebase newref = users.push();
                                     String key = newref.getKey();
                                     newref.setValue(user);
                                     Intent intent = new Intent(Register.this, Login.class);
                                     startActivity(intent);
+                                    //changed this file
                                 }
 
                                 @Override
@@ -123,19 +128,20 @@ public class Register extends AppCompatActivity {
         private String fullName;
         private String email;
         private String uid;
-        private Boolean blocked, activated;
-        private Long installedDate;
+        private boolean blocked;
+        private long time;
+        private boolean activated;
 
         public User() {
         }
 
-        public User(String email, String uid, String fullName, Boolean blocked, Boolean activated, long installedDate) {
+        public User(String email, String uid, String fullName, boolean blocked, boolean activated, long time) {
             this.fullName = fullName;
+            this.activated = activated;
+            this.time = time;
             this.uid = uid;
             this.email = email;
             this.blocked = blocked;
-            this.activated = activated;
-            this.installedDate = installedDate;
         }
 
         public String getFullName() {
@@ -150,17 +156,29 @@ public class Register extends AppCompatActivity {
             return email;
         }
 
-        public Boolean getBlocked() {
+        public boolean getBlocked() {
             return false;
         }
 
-        public Boolean getActivate() {
-            return false;
+        public boolean getActivated() {
+            return activated;
         }
 
-        public Long getInstalledDate() {return Long.parseLong(null);}
+        public long getTime() {
+            return time;
+        }
     }
 
+
+    public long getTime() {
+        String date = DateFormat.getDateTimeInstance().format(new Date());
+        //   Log.d("nuontime",date);
+
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        // Log.d("nuonhopethisisit", String.valueOf(timestamp))
+        return now.getTime();
+    }
 
     public static boolean isEmailValid(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();

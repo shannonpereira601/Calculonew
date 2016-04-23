@@ -77,28 +77,40 @@ public class Home extends AppCompatActivity
     int  installedDate, currDate,valipPeriod;
 
     private boolean check;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
-
-    String firstInstallDate() throws PackageManager.NameNotFoundException {
-        return simpleDateFormat.format(new Date(getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0).firstInstallTime));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
         try {
-            date = firstInstallDate();
-            Toast.makeText(getApplicationContext(), date, Toast.LENGTH_LONG).show();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        dateToday = simpleDateFormat.format(Calendar.getInstance().getTime());
-        Toast.makeText(getApplicationContext(), dateToday, Toast.LENGTH_LONG).show();
+            //Dates to compare
+            String CurrentDate=  "09/1/2015";
+            String FinalDate=  "09/8/2015";
+
+            Date date1;
+            Date date2;
+
+            SimpleDateFormat dates = new SimpleDateFormat("mm/dd/yyyy");
+
+            //Setting dates
+            date1 = dates.parse(CurrentDate);
+            date2 = dates.parse(FinalDate);
+
+            //Comparing dates
+            long difference = date1.getTime() - date2.getTime();
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
+
+            Log.d("Testdifferencelong","HERE: " + difference);
+            Log.d("Testdifference","HERE: " + dayDifference);
+
+        } catch (Exception exception) {
+            Log.e("DIDN'T WORK", "exception " + exception);
+        }
 
 
         ref = new Firebase("https://extraclass.firebaseio.com/");

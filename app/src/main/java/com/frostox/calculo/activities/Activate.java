@@ -6,29 +6,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
+import com.frostox.calculo.Entities.Logged;
+import com.frostox.calculo.dao.DaoMaster;
+import com.frostox.calculo.dao.DaoSession;
+import com.frostox.calculo.Entities.User;
+import com.frostox.calculo.dao.LoggedDao;
+import com.frostox.calculo.dao.UserDao;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.ValueEventListener;
-
+import java.util.List;
 
 import calculo.frostox.com.calculo.R;
+import de.greenrobot.dao.query.Query;
 
-public class Activate extends AppCompatActivity implements View.OnClickListener {
+public class Activate extends AppCompatActivity {
 
     EditText keyEditText;
-    Button act;
-    TextView tv;
-    String pushId;
-
-    Firebase ref = new Firebase("https://extraclass.firebaseio.com/users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,27 +31,8 @@ public class Activate extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.activity_activate);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        keyEditText = (EditText) findViewById(R.id.productKey);
-        act = (Button) findViewById(R.id.activate);
-        act.setOnClickListener(this);
-        tv = (TextView) findViewById(R.id.tvAcc);
-        tv.setVisibility(View.INVISIBLE);
-
-        Query query = ref.orderByChild("uid").equalTo(ref.getAuth().getUid()).limitToFirst(1);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    pushId = postSnapshot.getKey();
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        keyEditText = (EditText) findViewById(R.id.editText);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -69,26 +45,7 @@ public class Activate extends AppCompatActivity implements View.OnClickListener 
         super.onResume();
     }
 
-    @Override
-    public void onClick(View v) {
-        if (keyEditText.equals(ref.getAuth().getUid())) {
-            keyEditText.setVisibility(View.INVISIBLE);
-            act.setVisibility(View.INVISIBLE);
-            tv.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Account Activated", Toast.LENGTH_LONG).show();
-
-            final Firebase activeStated = ref.child(pushId);
-            activeStated.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    activeStated.child("activated").setValue("true");
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+    public void onActivate(View view){
     }
+
 }

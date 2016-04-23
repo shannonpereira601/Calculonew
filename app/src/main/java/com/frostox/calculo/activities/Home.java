@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +69,17 @@ public class Home extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        ImageView bb = (ImageView) toolbar.findViewById(R.id.backButton);
+        bb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!current.equals("Standard")) {
+                    navPrev();
+                } else if (current.equals("Standard")) {
+                    onBackPressed();
+                }
+            }
+        });
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.colayout);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         scrollView = (HorizontalScrollView) findViewById(R.id.scrollView);
@@ -78,7 +89,7 @@ public class Home extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         standardFragment = new EntityFragment1();

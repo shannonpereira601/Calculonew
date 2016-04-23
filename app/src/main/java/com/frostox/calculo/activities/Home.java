@@ -430,7 +430,7 @@ public class Home extends AppCompatActivity
                     Log.d("Checkdate",now.getTime()+"");
 
                     differenceDates = difference / (24 * 60 * 60 * 1000);
-                    if(differenceDates == 7)
+                    if(differenceDates == 7 && user.getActivated()==false)
                     {
                         Toast.makeText(getBaseContext(),"Your trial period is up",Toast.LENGTH_LONG).show();
                         current = "Timeout";

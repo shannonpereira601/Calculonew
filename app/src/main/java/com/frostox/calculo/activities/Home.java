@@ -434,7 +434,6 @@ public class Home extends AppCompatActivity
                     {
                         Toast.makeText(getBaseContext(),"Your trial period is up",Toast.LENGTH_LONG).show();
                         current = "Timeout";
-
                     }
                     if(differenceDates != 7)
                     {

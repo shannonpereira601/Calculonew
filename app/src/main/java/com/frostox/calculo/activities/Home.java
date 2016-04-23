@@ -3,6 +3,7 @@ package com.frostox.calculo.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,8 +33,14 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.frostox.calculo.adapters.Data;
 import com.frostox.calculo.enums.Entities;
 import com.frostox.calculo.fragments.EntityFragment1;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import calculo.frostox.com.calculo.R;
 
@@ -58,7 +66,7 @@ public class Home extends AppCompatActivity
 
     private boolean mcqMode = true;
 
-    private String current = "Standard", userid, userkey;
+    private String current = "Standard", userid, userkey, date, dateToday;
 
     private Entities currentList = Entities.STANDARD;
 
@@ -66,12 +74,32 @@ public class Home extends AppCompatActivity
 
     private HorizontalScrollView scrollView;
 
+    int  installedDate, currDate,valipPeriod;
+
     private boolean check;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+
+    String firstInstallDate() throws PackageManager.NameNotFoundException {
+        return simpleDateFormat.format(new Date(getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0).firstInstallTime));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        try {
+            date = firstInstallDate();
+            Toast.makeText(getApplicationContext(), date, Toast.LENGTH_LONG).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        dateToday = simpleDateFormat.format(Calendar.getInstance().getTime());
+        Toast.makeText(getApplicationContext(), dateToday, Toast.LENGTH_LONG).show();
+
 
         ref = new Firebase("https://extraclass.firebaseio.com/");
         AuthData authData = ref.getAuth();

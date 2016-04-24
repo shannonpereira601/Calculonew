@@ -13,12 +13,12 @@
 
         <item
             android:id="@+id/results"
-            android:icon="@drawable/ic_notes"
+            android:icon="@drawable/result"
             android:title="Results" />
 
         <item
             android:id="@+id/activate"
-            android:icon="@drawable/ic_notes"
+            android:icon="@drawable/activation"
             android:title="Activate" />
 
         <item

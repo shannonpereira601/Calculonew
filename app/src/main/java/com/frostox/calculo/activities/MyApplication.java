@@ -13,6 +13,7 @@ public class MyApplication extends Application{
         super.onCreate();
         Firebase.setAndroidContext(this);
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
+        Firebase.getDefaultConfig().setPersistenceCacheSizeBytes(100000000);
         Firebase refCourses = new Firebase("https://extraclass.firebaseio.com/courses");
         Firebase refSubjects = new Firebase("https://extraclass.firebaseio.com/subjects");
         Firebase refNotes = new Firebase("https://extraclass.firebaseio.com/notes");

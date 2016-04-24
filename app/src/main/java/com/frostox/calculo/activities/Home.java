@@ -427,7 +427,7 @@ public class Home extends AppCompatActivity
                     }
                     if(differenceDates != 7)
                     {
-                     Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+          //           Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
                     }
                 }
             }

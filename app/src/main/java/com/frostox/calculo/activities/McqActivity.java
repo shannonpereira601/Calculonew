@@ -47,7 +47,7 @@ import calculo.frostox.com.calculo.R;
 public class McqActivity extends AppCompatActivity {
 
 
-    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, score;
+    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted, rightwrong, totalscore;
     ImageView imga, imgb, imgc, imgd, imgquestion;
     String id, namebar, difficulty, noq, userkey, usertopickey;
     CardView cardview;
@@ -56,7 +56,6 @@ public class McqActivity extends AppCompatActivity {
     String[] ans, ansA, ansB, ansC, ansD, explanation, explanationType, name, question, topic, type, key;
     String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
     int[] ct;
-    ScrollView scrollres;
     RelativeLayout choosea, chooseb, choosec, choosed, prntrl;
 
     int count, scorecount;
@@ -187,13 +186,15 @@ public class McqActivity extends AppCompatActivity {
         choosec = (RelativeLayout) findViewById(R.id.choosec);
         choosed = (RelativeLayout) findViewById(R.id.choosed);
 
-        scrollres = (ScrollView) findViewById(R.id.scrollres);
         qn = (TextView) findViewById(R.id.question);
         optionA = (TextView) findViewById(R.id.ansa);
         optionB = (TextView) findViewById(R.id.ansb);
         optionC = (TextView) findViewById(R.id.ansc);
         optionD = (TextView) findViewById(R.id.ansd);
-        score = (TextView) findViewById(R.id.score);
+        totalques = (TextView) findViewById(R.id.totques);
+        totalscore = (TextView) findViewById(R.id.totalscore);
+        rightwrong = (TextView) findViewById(R.id.rightwrong);
+        attempted = (TextView) findViewById(R.id.attempted);
         scorecount = 0;
         click = (TextView) findViewById(R.id.answer);
         questionnumber = (TextView) findViewById(R.id.questionnumber);
@@ -214,7 +215,7 @@ public class McqActivity extends AppCompatActivity {
         TouchListener(choosed, "D");
         TouchListener(Skip, "skip");
         page = 0;
-        Log.d("Testreachedinit",type[page] + ".." + ansA[page]);
+        Log.d("Testreachedinit", type[page] + ".." + ansA[page]);
         checkanswer = new boolean[count];
         load(0);
     }
@@ -236,7 +237,7 @@ public class McqActivity extends AppCompatActivity {
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
 
-       /* if (v == null && !skip)
+      /* if (v == null && !skip)
             Snackbar.make(viewGroup, "Correct!", Snackbar.LENGTH_LONG).show();
         else if(v!=null && !skip)Snackbar.make(viewGroup, "Wrong!", Snackbar.LENGTH_LONG).show();
         else Snackbar.make(viewGroup, "Skipped!", Snackbar.LENGTH_LONG).show();*/
@@ -245,14 +246,15 @@ public class McqActivity extends AppCompatActivity {
             noqmode = true;
             Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
             getSupportActionBar().setTitle("Result");
-            scrollres.setVisibility(View.VISIBLE);
             textinvisible();
             imginvisible();
             prntrl.setVisibility(View.INVISIBLE);
-            score.setVisibility(View.VISIBLE);
             cardview.setVisibility(View.VISIBLE);
             count = Integer.parseInt(noq);
-            score.setText("Total Questions: " + count + "\n" + "Attempted: " + (count - skipped) + "\n" + "Not Attempted: " + skipped + "\n" + "Right Answer: " + scorecount + "\n" + "Wrong Answer: " + (count - scorecount - skipped) + "\n" + "Total Score: " + scorecount);
+            totalques.setText("Total Questions: " + count);
+            attempted.setText("Attempted: " + (count - skipped) + "        " + "Not Attempted: " + skipped);
+            rightwrong.setText("Right Answer: " + scorecount + "      " + "Wrong Answer: " + (count - scorecount - skipped));
+            totalscore.setText("Total Score: " + scorecount);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
             rv.setAdapter(ra);
@@ -261,19 +263,18 @@ public class McqActivity extends AppCompatActivity {
         if (page != count && count != 0) {
             load(page);
         } else if (page >= count) {
-            Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
+            Snackbar.make(viewGroup, "All Done!", Snackbar.LENGTH_LONG).show();
             Skip.setVisibility(View.INVISIBLE);
             getSupportActionBar().setTitle("Result");
             textinvisible();
             imginvisible();
             prntrl.setVisibility(View.INVISIBLE);
-            scrollres.setVisibility(View.VISIBLE);
-            score.setVisibility(View.VISIBLE);
             cardview.setVisibility(View.VISIBLE);
-
             if (!noqmode)
-                score.setText("Total Questions: " + count + "\n" + "Attempted: " + (count - skipped) + "\n" + "Not Attempted: " + skipped + "\n" + "Right Answer: " + scorecount + "\n" + "Wrong Answer: " + (count - scorecount - skipped) + "\n" + "Total Score: " + scorecount);
-
+                totalques.setText("Total Questions: " + count);
+            attempted.setText("Attempted: " + (count - skipped) + "       " + "Not Attempted: " + skipped);
+            rightwrong.setText("Right Answer: " + scorecount + "      " + "Wrong Answer: " + (count - scorecount - skipped));
+            totalscore.setText("Total Score: " + scorecount);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
             rv.setAdapter(ra);
@@ -393,15 +394,15 @@ public class McqActivity extends AppCompatActivity {
                                 checkanswer[page] = false;
                                 onClickNext((View) findViewById(R.id.dummy));
                             }
-                            Log.d("Testreachedtouch",state + ".." + usertopickey + ".." +type[page-1] + ".." + ansA[page-1]);
-                            if (ans[page-1].equals("A"))
-                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
-                            else if (ans[page-1].equals("B"))
-                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
-                            else if (ans[page-1].equals("C"))
-                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
-                            else if (ans[page-1].equals("D"))
-                                mcqs = new Usermcq(usertopickey, key[page-1], state + " " + ans[page-1], ansA[page-1], question[page-1], type[page-1]);
+                            Log.d("Testreachedtouch", state + ".." + usertopickey + ".." + type[page - 1] + ".." + ansA[page - 1]);
+                            if (ans[page - 1].equals("A"))
+                                mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
+                            else if (ans[page - 1].equals("B"))
+                                mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
+                            else if (ans[page - 1].equals("C"))
+                                mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
+                            else if (ans[page - 1].equals("D"))
+                                mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
                             mcqref.push().setValue(mcqs);
                         }
 

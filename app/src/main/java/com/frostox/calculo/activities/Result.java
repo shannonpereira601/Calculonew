@@ -46,11 +46,6 @@ public class Result extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView2 = (RecyclerView) findViewById(R.id.rv2);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
 
         Intent intent = this.getIntent();
         userkey = intent.getStringExtra("userkey");
@@ -113,20 +108,10 @@ public class Result extends AppCompatActivity {
             }
         };
 
-       /* recyclerAdapter2 = new FirebaseRecyclerAdapter<Usermcq, MyViewHolder>(Usermcq.class, R.layout.resultitem, MyViewHolder.class, mcqref) {
-            @Override
-            public void populateViewHolder(MyViewHolder myViewHolder, final Usermcq usermcq, final int position) {
-                myViewHolder.questionnumber.setText(usermcq.getMcqid());
-                myViewHolder.question.setText(usermcq.getMcqid());
-                myViewHolder.answer.setText(usermcq.getMcqid());
-                myViewHolder.explanation.setText(usermcq.getState());
-                Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + usermcq.getMcqid() + "question").into(myViewHolder.ct);
-                Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + usermcq.getMcqid() + "question").into(myViewHolder.imgquestion);
-                Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + usermcq.getMcqid() + "A").into(myViewHolder.imganswer);
-                Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + usermcq.getMcqid() + "explanation").into(myViewHolder.imgexplanation);
-            }
-        };*/
-
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(recyclerAdapter);
 
     }
@@ -187,7 +172,9 @@ public class Result extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         recyclerAdapter.cleanup();
-        recyclerAdapter2.cleanup();
+       if(!topicmode) {
+           recyclerAdapter2.cleanup();
+       }
     }
 
 

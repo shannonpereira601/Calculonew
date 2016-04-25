@@ -63,6 +63,7 @@ public class Result extends AppCompatActivity {
         usermcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/mcqs");
         getKey(usertopicref);
         checkmcqs();
+        //
 
         recyclerAdapter = new FirebaseRecyclerAdapter<Usertopics, DataObjectHolder>(Usertopics.class, R.layout.resulttopicitem, DataObjectHolder.class, usertopicref) {
             @Override

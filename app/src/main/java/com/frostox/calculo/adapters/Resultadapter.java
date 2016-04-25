@@ -67,7 +67,6 @@ public class Resultadapter extends RecyclerView.Adapter<Resultadapter.MyViewHold
         protected TextView question;
         protected TextView answer;
         protected TextView explanation;
-        private Context context;
 
 
         public MyViewHolder(View v) {
@@ -86,9 +85,6 @@ public class Resultadapter extends RecyclerView.Adapter<Resultadapter.MyViewHold
         @Override
         public void onClick(View v) {
             context = v.getContext();
-
-            Toast.makeText(context, "Clicked here " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
-
         }
     }
 }

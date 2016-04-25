@@ -47,7 +47,7 @@ import calculo.frostox.com.calculo.R;
 public class McqActivity extends AppCompatActivity {
 
 
-    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted, rightwrong, totalscore;
+    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted,notattempted, right, wrong, totalscore;
     ImageView imga, imgb, imgc, imgd, imgquestion;
     String id, namebar, difficulty, noq, userkey, usertopickey;
     CardView cardview;
@@ -193,8 +193,10 @@ public class McqActivity extends AppCompatActivity {
         optionD = (TextView) findViewById(R.id.ansd);
         totalques = (TextView) findViewById(R.id.totques);
         totalscore = (TextView) findViewById(R.id.totalscore);
-        rightwrong = (TextView) findViewById(R.id.rightwrong);
+        right = (TextView) findViewById(R.id.right);
+        wrong = (TextView) findViewById(R.id.wrong);
         attempted = (TextView) findViewById(R.id.attempted);
+        notattempted = (TextView)findViewById(R.id.notattempted);
         scorecount = 0;
         click = (TextView) findViewById(R.id.answer);
         questionnumber = (TextView) findViewById(R.id.questionnumber);
@@ -252,8 +254,10 @@ public class McqActivity extends AppCompatActivity {
             cardview.setVisibility(View.VISIBLE);
             count = Integer.parseInt(noq);
             totalques.setText("Total Questions: " + count);
-            attempted.setText("Attempted: " + (count - skipped) + "        " + "Not Attempted: " + skipped);
-            rightwrong.setText("Right Answer: " + scorecount + "      " + "Wrong Answer: " + (count - scorecount - skipped));
+            attempted.setText("Attempted: " + (count - skipped));
+            notattempted.setText("Not Attempted: "+ skipped);
+            right.setText("Right Answer: " + scorecount);
+            wrong.setText("Wrong Answer: " + (count - scorecount - skipped));
             totalscore.setText("Total Score: " + scorecount);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());
@@ -272,8 +276,11 @@ public class McqActivity extends AppCompatActivity {
             cardview.setVisibility(View.VISIBLE);
             if (!noqmode)
                 totalques.setText("Total Questions: " + count);
-            attempted.setText("Attempted: " + (count - skipped) + "       " + "Not Attempted: " + skipped);
-            rightwrong.setText("Right Answer: " + scorecount + "      " + "Wrong Answer: " + (count - scorecount - skipped));
+            totalques.setText("Total Questions: " + count);
+            attempted.setText("Attempted: " + (count - skipped));
+            notattempted.setText("Not Attempted: "+ skipped);
+            right.setText("Right Answer: " + scorecount);
+            wrong.setText("Wrong Answer: " + (count - scorecount - skipped));
             totalscore.setText("Total Score: " + scorecount);
             rv.setVisibility(View.VISIBLE);
             ra = new Resultadapter(this, getdata());

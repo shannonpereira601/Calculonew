@@ -139,7 +139,7 @@ public class Register extends AppCompatActivity {
 
                                 @Override
                                 public void onAuthenticationError(FirebaseError firebaseError) {
-                                    Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "An error has occured. Please try again!", Toast.LENGTH_LONG).show();
                                 }
                             });
 
@@ -147,7 +147,7 @@ public class Register extends AppCompatActivity {
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
-                            Toast.makeText(getApplicationContext(), firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "An error has occured. Please try again!", Toast.LENGTH_LONG).show();
                         }
                     });
 

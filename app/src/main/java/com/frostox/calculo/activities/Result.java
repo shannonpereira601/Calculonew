@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class Result extends AppCompatActivity {
     private RecyclerView recyclerView, recyclerView2;
     private boolean topicmode = true;
     int counter, count1, count2;
+    private Button clear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class Result extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView2 = (RecyclerView) findViewById(R.id.rv2);
+        clear = (Button)findViewById(R.id.clear);
+        recyclerView.setVisibility(View.VISIBLE);
 
         final LinearLayoutManager llm2 = new LinearLayoutManager(this);
         llm2.setOrientation(LinearLayoutManager.VERTICAL);
@@ -59,11 +63,11 @@ public class Result extends AppCompatActivity {
         usermcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/mcqs");
         getKey(usertopicref);
         checkmcqs();
-        getKey(usertopicref);
 
         recyclerAdapter = new FirebaseRecyclerAdapter<Usertopics, DataObjectHolder>(Usertopics.class, R.layout.resulttopicitem, DataObjectHolder.class, usertopicref) {
             @Override
             public void populateViewHolder(DataObjectHolder dataObjectHolder, final Usertopics usertopics, final int position) {
+
                 dataObjectHolder.label.setText(usertopics.getName());
                 dataObjectHolder.difficulty.setText("Difficulty: " + usertopics.getDifficulty());
                 dataObjectHolder.date.setText("Date: " + usertopics.getTimestamp());
@@ -108,6 +112,7 @@ public class Result extends AppCompatActivity {
 
                         recyclerView2.setLayoutManager(llm2);
                         recyclerView2.setAdapter(recyclerAdapter2);
+                        clear.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.GONE);
                     }
                 });
@@ -168,6 +173,7 @@ public class Result extends AppCompatActivity {
             Log.d("checking", "" + topicmode);
             recyclerView2.setVisibility(View.GONE);
             recyclerView.setAdapter(recyclerAdapter);
+            clear.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             topicmode = true;
         } else {
@@ -185,6 +191,11 @@ public class Result extends AppCompatActivity {
         }
     }
 
+    public void Clear(View v)
+    {
+      //  recyclerView.setVisibility(View.GONE);
+        usermcqref.removeValue();
+    }
 
     public void getKey(Query query) {
         query.addValueEventListener(new ValueEventListener() {
@@ -232,6 +243,7 @@ public class Result extends AppCompatActivity {
                         // Log.d("Checkingloop",""+i);
                     }
                 }
+                getKey(usertopicref);
             }
 
             @Override

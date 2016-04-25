@@ -126,7 +126,7 @@ public class Login extends AppCompatActivity {
                                     break;
                                 default:
                                     Log.d("onnAuthError3", "Default");
-                                    Toast.makeText(Login.this, "Please Try Again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, "An error has occured. Please try again!", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }

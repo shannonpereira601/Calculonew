@@ -17,7 +17,6 @@
         android:id="@+id/productKey"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/color_white"
         android:hint="@string/ask_register_msg"
         android:singleLine="true"
         android:gravity="center"/>

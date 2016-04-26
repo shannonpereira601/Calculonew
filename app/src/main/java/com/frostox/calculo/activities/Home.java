@@ -91,6 +91,7 @@ public class Home extends AppCompatActivity
         userid = authData.getUid();
         getUserKey();
 
+        MyApplication myApplication = new MyApplication();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -416,8 +417,6 @@ public class Home extends AppCompatActivity
                     java.util.Date now = calendar.getTime();
                     long time = user.getTime();
                     long difference = now.getTime()-time;
-
-                    Log.d("Checkdate",now.getTime()+"");
 
                     differenceDates = difference / (24 * 60 * 60 * 1000);
                     if(differenceDates == 7 && user.getActivated()==false)

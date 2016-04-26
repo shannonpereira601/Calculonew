@@ -36,6 +36,12 @@ public class Login extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     //#firebasetest
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
        sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);

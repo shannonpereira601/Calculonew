@@ -2,7 +2,10 @@ package com.frostox.calculo.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -33,8 +36,12 @@ import com.frostox.calculo.Nodes.MCQs;
 import com.frostox.calculo.Nodes.Usermcq;
 import com.frostox.calculo.adapters.ResultData;
 import com.frostox.calculo.adapters.Resultadapter;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -47,7 +54,7 @@ import calculo.frostox.com.calculo.R;
 public class McqActivity extends AppCompatActivity {
 
 
-    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted,notattempted, right, wrong, totalscore;
+    TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted, notattempted, right, wrong, totalscore;
     ImageView imga, imgb, imgc, imgd, imgquestion;
     String id, namebar, difficulty, noq, userkey, usertopickey;
     CardView cardview;
@@ -196,7 +203,7 @@ public class McqActivity extends AppCompatActivity {
         right = (TextView) findViewById(R.id.right);
         wrong = (TextView) findViewById(R.id.wrong);
         attempted = (TextView) findViewById(R.id.attempted);
-        notattempted = (TextView)findViewById(R.id.notattempted);
+        notattempted = (TextView) findViewById(R.id.notattempted);
         scorecount = 0;
         click = (TextView) findViewById(R.id.answer);
         questionnumber = (TextView) findViewById(R.id.questionnumber);
@@ -255,7 +262,7 @@ public class McqActivity extends AppCompatActivity {
             count = Integer.parseInt(noq);
             totalques.setText("Total Questions: " + count);
             attempted.setText("Attempted: " + (count - skipped));
-            notattempted.setText("Not Attempted: "+ skipped);
+            notattempted.setText("Not Attempted: " + skipped);
             right.setText("Right Answer: " + scorecount);
             wrong.setText("Wrong Answer: " + (count - scorecount - skipped));
             totalscore.setText("Total Score: " + scorecount);
@@ -278,7 +285,7 @@ public class McqActivity extends AppCompatActivity {
                 totalques.setText("Total Questions: " + count);
             totalques.setText("Total Questions: " + count);
             attempted.setText("Attempted: " + (count - skipped));
-            notattempted.setText("Not Attempted: "+ skipped);
+            notattempted.setText("Not Attempted: " + skipped);
             right.setText("Right Answer: " + scorecount);
             wrong.setText("Wrong Answer: " + (count - scorecount - skipped));
             totalscore.setText("Total Score: " + scorecount);
@@ -318,11 +325,11 @@ public class McqActivity extends AppCompatActivity {
         } else if (type[i].equals("image")) {
             textinvisible();
             imgvisible();
-            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "quest").into(imgquestion);
-            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "A").into(imga);
-            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "B").into(imgb);
-            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "C").into(imgc);
-            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "D").into(imgd);
+            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "quest").networkPolicy(NetworkPolicy.OFFLINE).into(imgquestion);
+            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "A").networkPolicy(NetworkPolicy.OFFLINE).into(imga);
+            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "B").networkPolicy(NetworkPolicy.OFFLINE).into(imgb);
+            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "C").networkPolicy(NetworkPolicy.OFFLINE).into(imgc);
+            Picasso.with(getBaseContext()).load("http://www.frostox.com/extraclass/uploads/" + key[i] + "D").networkPolicy(NetworkPolicy.OFFLINE).into(imgd);
             questionnumber.setText("Q." + (i + 1));
             rvqno[i] = ("Q." + (i + 1));
             rvqn[i] = "";
@@ -492,5 +499,6 @@ public class McqActivity extends AppCompatActivity {
         imgd.setVisibility(View.INVISIBLE);
 
     }
+
 }
 

@@ -35,7 +35,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/color_white"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:onClick="navigate"/>
 
             <TextView
                 android:id="@+id/subjects"
@@ -48,7 +49,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="8dp"
                 android:visibility="invisible"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"
+                android:onClick="navigate"/>
 
             <TextView
                 android:id="@+id/topics"
@@ -61,7 +63,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="8dp"
                 android:visibility="invisible"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"
+                android:onClick="navigate"/>
 
             <TextView
                 android:id="@+id/mcqnotes"
@@ -74,7 +77,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="8dp"
                 android:visibility="invisible"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"
+                android:onClick="navigate"/>
 
         </LinearLayout>
 

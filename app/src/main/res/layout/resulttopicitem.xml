@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:padding="12dp"
             android:text="Recycler View Item"
             android:layout_weight="2"
@@ -31,24 +32,36 @@
             android:orientation="vertical"
             android:layout_gravity="center"
             android:gravity="right"
-            android:paddingRight="10dp"
             android:layout_weight="3"
+            android:background="#ddd"
             >
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/score"
+                android:layout_gravity="left"
+                android:text="sda"
+                android:layout_margin="1dp"
+                android:background="@color/color_white"/>
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/difficulty"
                 android:layout_gravity="left"
-                android:text="sda" />
+                android:text="sda"
+                android:layout_margin="1dp"
+                android:background="@color/color_white"/>
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:id="@+id/date"
-                android:text="asdasd" />
+                android:text="asdasd"
+                android:layout_margin="1dp"
+                android:background="@color/color_white"/>
         </LinearLayout>
 
     </LinearLayout>

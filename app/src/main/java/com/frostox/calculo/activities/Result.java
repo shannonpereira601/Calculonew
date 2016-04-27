@@ -72,6 +72,7 @@ public class Result extends AppCompatActivity {
                 dataObjectHolder.label.setText(usertopics.getName());
                 dataObjectHolder.difficulty.setText("Difficulty: " + usertopics.getDifficulty());
                 dataObjectHolder.date.setText("Date: " + usertopics.getTimestamp());
+                dataObjectHolder.score.setText("Score: "+usertopics.getScore());
                 dataObjectHolder.ll.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -134,6 +135,7 @@ public class Result extends AppCompatActivity {
         public TextView label;
         public TextView difficulty;
         public TextView date;
+        public TextView score;
         public LinearLayout ll;
 
         public DataObjectHolder(View itemView) {
@@ -141,6 +143,7 @@ public class Result extends AppCompatActivity {
             label = (TextView) itemView.findViewById(R.id.recycler_view_item_text);
             difficulty = (TextView) itemView.findViewById(R.id.difficulty);
             date = (TextView) itemView.findViewById(R.id.date);
+            score = (TextView) itemView.findViewById(R.id.score);
             ll = (LinearLayout) itemView.findViewById(R.id.ll);
         }
 

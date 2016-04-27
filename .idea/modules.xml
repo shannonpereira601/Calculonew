@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Calculonew.iml" filepath="$PROJECT_DIR$/Calculonew.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/golgappalatest.iml" filepath="$PROJECT_DIR$/golgappalatest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/golgappanewlatestone.iml" filepath="$PROJECT_DIR$/golgappanewlatestone.iml" />
     </modules>
   </component>
 </project>

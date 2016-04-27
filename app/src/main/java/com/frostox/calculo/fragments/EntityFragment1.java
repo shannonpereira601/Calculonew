@@ -227,7 +227,7 @@ public class EntityFragment1 extends Fragment implements AdapterView.OnItemSelec
                 public void onClick(View v) {
 
                     topicref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/topics/");
-                    Usertopics usertopics = new Usertopics(topicname, id, getTimeStamp(),difficulty);
+                    Usertopics usertopics = new Usertopics(topicname, id, getTimeStamp(),difficulty,"0");
                     Firebase pushtopic = topicref.push();
                     String usertopickey = pushtopic.getKey();
                     pushtopic.setValue(usertopics);

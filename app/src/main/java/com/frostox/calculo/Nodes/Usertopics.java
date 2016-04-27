@@ -9,6 +9,12 @@ public class Usertopics{
     private String topicid;
     public String timestamp;
 
+    public String getScore() {
+        return score;
+    }
+
+    public String score;
+
     public String getDifficulty() {
         return difficulty;
     }
@@ -18,7 +24,8 @@ public class Usertopics{
     public Usertopics() {
     }
 
-    public Usertopics(String name, String topicid, String timestamp, String difficulty) {
+    public Usertopics(String name, String topicid, String timestamp, String difficulty, String score) {
+        this.score = score;
         this.difficulty = difficulty;
         this.name = name;
         this.topicid = topicid;

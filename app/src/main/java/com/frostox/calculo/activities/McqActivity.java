@@ -19,6 +19,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,7 +56,7 @@ import calculo.frostox.com.calculo.R;
 
 public class McqActivity extends AppCompatActivity {
 
-
+    Animation animFadeIn, animFadeOut;
     TextView optionA, optionB, optionC, optionD, qn, questionnumber, click, totalques, attempted, notattempted, right, wrong, totalscore;
     ImageView imga, imgb, imgc, imgd, imgquestion;
     String id, namebar, difficulty, noq, userkey, usertopickey;
@@ -62,16 +65,17 @@ public class McqActivity extends AppCompatActivity {
 
     String[] ans, ansA, ansB, ansC, ansD, explanation, explanationType, name, question, topic, type, key;
     String[] rvqno, rvexpurl, rvurl, rvansurl, rvqn, rvans, rvexp;
+    String[] usermcqkeys;
     int[] ct;
     RelativeLayout choosea, chooseb, choosec, choosed, prntrl;
 
     int count, scorecount;
     boolean[] checkanswer;
     int skipped, correct, page;
-    boolean noqmode = false;
+    boolean noqmode = false, done = false;
     RecyclerView rv;
     Resultadapter ra;
-    Firebase ref, mcqref;
+    Firebase ref, mcqref, usertopicscore, usertopicref;
 
 
     @Override
@@ -120,6 +124,8 @@ public class McqActivity extends AppCompatActivity {
         noq = intent.getStringExtra("noq");
         userkey = intent.getStringExtra("userkey");
         usertopickey = intent.getStringExtra("usertopickey");
+
+        usertopicscore = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/topics/" + usertopickey + "/score");
         mcqref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/mcqs");
         namebar = "Default";
         Query query = ref.orderByChild("topic").equalTo(id);
@@ -138,6 +144,7 @@ public class McqActivity extends AppCompatActivity {
                 question = new String[length];
                 explanationType = new String[length];
                 explanation = new String[length];
+                usermcqkeys = new String[length];
                 key = new String[length];
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     key[count] = postSnapshot.getKey();
@@ -229,7 +236,6 @@ public class McqActivity extends AppCompatActivity {
         load(0);
     }
 
-
     public void onClickPrev(View v) {
         --page;
         if (page >= (-1)) {
@@ -252,6 +258,7 @@ public class McqActivity extends AppCompatActivity {
         else Snackbar.make(viewGroup, "Skipped!", Snackbar.LENGTH_LONG).show();*/
 
         if (page == (Integer.parseInt(noq))) {
+            done = true;
             noqmode = true;
             Toast.makeText(McqActivity.this, "All Done!", Toast.LENGTH_LONG).show();
             getSupportActionBar().setTitle("Result");
@@ -260,6 +267,8 @@ public class McqActivity extends AppCompatActivity {
             prntrl.setVisibility(View.INVISIBLE);
             cardview.setVisibility(View.VISIBLE);
             count = Integer.parseInt(noq);
+
+            usertopicscore.setValue(scorecount);
             totalques.setText("Total Questions: " + count);
             attempted.setText("Attempted: " + (count - skipped));
             notattempted.setText("Not Attempted: " + skipped);
@@ -274,11 +283,14 @@ public class McqActivity extends AppCompatActivity {
         if (page != count && count != 0) {
             load(page);
         } else if (page >= count) {
+            done = true;
             Snackbar.make(viewGroup, "All Done!", Snackbar.LENGTH_LONG).show();
             Skip.setVisibility(View.INVISIBLE);
             getSupportActionBar().setTitle("Result");
             textinvisible();
             imginvisible();
+
+            usertopicscore.setValue(scorecount);
             prntrl.setVisibility(View.INVISIBLE);
             cardview.setVisibility(View.VISIBLE);
             if (!noqmode)
@@ -354,7 +366,6 @@ public class McqActivity extends AppCompatActivity {
             rvexp[i] = "";
         }
 
-
         getSupportActionBar().setTitle(name[i]);
     }
 
@@ -417,7 +428,15 @@ public class McqActivity extends AppCompatActivity {
                                 mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
                             else if (ans[page - 1].equals("D"))
                                 mcqs = new Usermcq(usertopickey, key[page - 1], state + " " + ans[page - 1], ansA[page - 1], question[page - 1], type[page - 1]);
-                            mcqref.push().setValue(mcqs);
+                            Firebase push = mcqref.push();
+                            usermcqkeys[page - 1] = push.getKey();
+                            push.setValue(mcqs);
+                            animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                                    R.anim.mcqs);
+                            animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),
+                                    R.anim.mcqs);
+                            prntrl.startAnimation(animFadeIn);
+                            //animin.start();
                         }
 
                         break;
@@ -500,5 +519,18 @@ public class McqActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!done) {
+            usertopicref = new Firebase("https://extraclass.firebaseio.com/users/" + userkey + "/topics/" + usertopickey);
+            usertopicref.removeValue();
+            for (int i = 0; i < usermcqkeys.length; i++) {
+                if (usermcqkeys[i] != null)
+                    mcqref.child(usermcqkeys[i]).removeValue();
+            }
+        }
+        super.onBackPressed();
+
+    }
 }
 

@@ -74,7 +74,7 @@ public class Home extends AppCompatActivity
 
     private HorizontalScrollView scrollView;
 
-    int  installedDate, currDate,valipPeriod;
+    int installedDate, currDate, valipPeriod;
 
     long differenceDates;
 
@@ -90,8 +90,6 @@ public class Home extends AppCompatActivity
         AuthData authData = ref.getAuth();
         userid = authData.getUid();
         getUserKey();
-
-        MyApplication myApplication = new MyApplication();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -197,8 +195,8 @@ public class Home extends AppCompatActivity
             if (current.equals("Note"))
                 navPrev();
             //TODO Fragement operations
-        }else if (id == R.id.activate) {
-           Intent intent = new Intent(Home.this,Activate.class);
+        } else if (id == R.id.activate) {
+            Intent intent = new Intent(Home.this, Activate.class);
             startActivity(intent);
             //TODO Fragement operations
         } else if (id == R.id.nav_logout) {
@@ -348,7 +346,7 @@ public class Home extends AppCompatActivity
                 break;
 
             case "Timeout":
-                Toast.makeText(getBaseContext(),"Sorry your trial period is up",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Sorry your trial period is up", Toast.LENGTH_LONG).show();
                 break;
         }
 
@@ -416,17 +414,15 @@ public class Home extends AppCompatActivity
                     Calendar calendar = Calendar.getInstance();
                     java.util.Date now = calendar.getTime();
                     long time = user.getTime();
-                    long difference = now.getTime()-time;
+                    long difference = now.getTime() - time;
 
                     differenceDates = difference / (24 * 60 * 60 * 1000);
-                    if(differenceDates == 7 && user.getActivated()==false)
-                    {
-                        Toast.makeText(getBaseContext(),"Your trial period is up " +differenceDates,Toast.LENGTH_LONG).show();
+                    if (differenceDates == 7 && user.getActivated() == false) {
+                        Toast.makeText(getBaseContext(), "Your trial period is up " + differenceDates, Toast.LENGTH_LONG).show();
                         current = "Timeout";
                     }
-                    if(differenceDates != 7)
-                    {
-          //           Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+                    if (differenceDates != 7) {
+                        //           Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -436,6 +432,27 @@ public class Home extends AppCompatActivity
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
+
+    }
+
+    public void navigate(View v) {
+        switch (v.getId())
+        {
+            case R.id.courses:
+                while (!current.equals("Standard"))
+                    navPrev();
+                break;
+            case R.id.subjects:
+                while (!current.equals("Subject"))
+                    navPrev();
+                break;
+            case R.id.topics:
+                while(!current.equals("Topic"))
+                    navPrev();
+                break;
+
+        };
+
 
     }
 }

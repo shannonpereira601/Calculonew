@@ -15,12 +15,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +74,8 @@ public class Home extends AppCompatActivity
 
     private TextView courses, subjects, topics, mcqnotes;
 
+    private FrameLayout frameLayout;
+
     private HorizontalScrollView scrollView;
 
     int installedDate, currDate, valipPeriod;
@@ -91,6 +95,7 @@ public class Home extends AppCompatActivity
         userid = authData.getUid();
         getUserKey();
 
+        frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ImageView bb = (ImageView) toolbar.findViewById(R.id.backButton);
@@ -345,9 +350,6 @@ public class Home extends AppCompatActivity
                 startActivity(intent);
                 break;
 
-            case "Timeout":
-                Toast.makeText(getBaseContext(), "Sorry your trial period is up", Toast.LENGTH_LONG).show();
-                break;
         }
 
 
@@ -417,12 +419,15 @@ public class Home extends AppCompatActivity
                     long difference = now.getTime() - time;
 
                     differenceDates = difference / (24 * 60 * 60 * 1000);
-                    if (differenceDates == 7 && user.getActivated() == false) {
-                        Toast.makeText(getBaseContext(), "Your trial period is up " + differenceDates, Toast.LENGTH_LONG).show();
-                        current = "Timeout";
+
+
+                    if (differenceDates >= 7 && !user.getActivated()) {
+                        Toast.makeText(getBaseContext(), "Sorry your trial period is up", Toast.LENGTH_LONG).show();
+                        frameLayout.setVisibility(View.GONE);
                     }
-                    if (differenceDates != 7) {
-                        //           Toast.makeText(getBaseContext(),"Still time .."+differenceDates,Toast.LENGTH_LONG).show();
+                    else if(user.getActivated())
+                    {
+                        frameLayout.setVisibility(View.VISIBLE);
                     }
                 }
             }
